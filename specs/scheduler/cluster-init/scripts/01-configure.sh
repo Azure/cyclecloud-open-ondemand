@@ -18,7 +18,7 @@ cp -fv ${files_dir}/login_cluster.yml $OOD_CLUSTER_DIR/login_slurm_$CLUSTER_NAME
 cp -fv ${files_dir}/slurm_cluster.yml $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
 
 sed -i "s/__CLUSTER_NAME__/${CLUSTER_NAME}/g" $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
-sed -i "s/__BIN_OVERRIDES_DIR__/${BIN_OVERRIDES}/g" $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
+sed -i "s|__BIN_OVERRIDES_DIR__|${BIN_OVERRIDES}|g" $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
 sed -i "s/__CLUSTER_NAME__/${CLUSTER_NAME}/g" $OOD_CLUSTER_DIR/login_slurm_$CLUSTER_NAME.yml
 
 # Copy slurm command wrapper scripts to the shared directory
