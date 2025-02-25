@@ -11,7 +11,7 @@ mkdir -pv $OOD_CLUSTER_DIR
 # - Update clusters definition files
 # - Copy clusters definition files to the shared directory
 CLUSTER_NAME=$(jetpack config cyclecloud.cluster.name)
-NODE_PREFIX=$(jetpack config jetpack config slurm.node_prefix)
+NODE_PREFIX=$(jetpack config slurm.node_prefix)
 BIN_OVERRIDES=$OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME/bin_overrides
 
 # Copy clusters definition files to the shared directory
