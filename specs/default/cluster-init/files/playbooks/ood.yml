@@ -66,8 +66,8 @@
 
   - name: Replace the clusters.d directory with a link to the shared directory
     ansible.builtin.file:
-      src: /etc/ood/config/clusters.d
-      dest: /shared/ood/config/clusters.d
+      src: /shared/ood/config/clusters.d
+      dest: /etc/ood/config/clusters.d
       state: link
 
   # Create a script to run before the PUN is created, to set the user's environment if not exists
