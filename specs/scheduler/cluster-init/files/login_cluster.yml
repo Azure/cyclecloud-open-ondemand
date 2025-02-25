@@ -6,10 +6,10 @@ v2:
   job:
     adapter: "systemd"
     # Submit host can be the IP of the LB in front of the login VMSS
-    submit_host: "__NODE_PREFIX__login-1"
+    submit_host: "__CLUSTERNAME__-login-1"
     # TODO: Fill up with ccw-login-1 => ccw-login-<max>
     ssh_hosts:
-      - __NODE_PREFIX__login-1
+      - __CLUSTERNAME__-login-1
     #site_timeout: 7200
     strict_host_checking: false
     debug: true

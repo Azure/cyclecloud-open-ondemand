@@ -3,7 +3,7 @@ v2:
   metadata:
     title: "Slurm __CLUSTERNAME__"
   login:
-    host: "__NODE_PREFIX__login-1"
+    host: "__CLUSTERNAME__-login-1"
   job:
     adapter: "slurm"
     #bin: "/usr/bin"

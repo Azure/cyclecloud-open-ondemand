@@ -11,7 +11,6 @@ mkdir -pv $OOD_CLUSTER_DIR
 # - Update clusters definition files
 # - Copy clusters definition files to the shared directory
 CLUSTER_NAME=$(jetpack config cyclecloud.cluster.name)
-NODE_PREFIX="${CLUSTER_NAME}-"
 BIN_OVERRIDES=$OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME/bin_overrides
 
 # Copy clusters definition files to the shared directory
@@ -20,8 +19,7 @@ cp -fv ${files_dir}/slurm_cluster.yml $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
 
 sed -i "s/__CLUSTER_NAME__/${CLUSTER_NAME}/g" $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
 sed -i "s/__BIN_OVERRIDES_DIR__/${BIN_OVERRIDES}/g" $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
-sed -i "s/__NODE_PREFIX__/${NODE_PREFIX}/g" $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
-sed -i "s/__NODE_PREFIX__/${NODE_PREFIX}/g" $OOD_CLUSTER_DIR/login_slurm_$CLUSTER_NAME.yml
+sed -i "s/__CLUSTER_NAME__/${CLUSTER_NAME}/g" $OOD_CLUSTER_DIR/login_slurm_$CLUSTER_NAME.yml
 
 # Copy slurm command wrapper scripts to the shared directory
 mkdir -pv $BIN_OVERRIDES
