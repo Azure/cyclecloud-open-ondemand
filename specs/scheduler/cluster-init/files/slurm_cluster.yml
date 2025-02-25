@@ -1,0 +1,23 @@
+---
+v2:
+  metadata:
+    title: "Slurm CCW"
+  login:
+    host: "ccw-login-1"
+  job:
+    adapter: "slurm"
+    #bin: "/usr/bin"
+    bin_overrides:
+      sbatch: "/etc/ood/config/clusters.d/slurm_ccw/bin_overrides/sbatch.sh"
+      squeue: "/etc/ood/config/clusters.d/slurm_ccw/bin_overrides/squeue.sh"
+      scontrol: "/etc/ood/config/clusters.d/slurm_ccw/bin_overrides/scontrol.sh"
+      scancel: "/etc/ood/config/clusters.d/slurm_ccw/bin_overrides/scancel.sh"
+      sinfo: "/etc/ood/config/clusters.d/slurm_ccw/bin_overrides/sinfo.sh"
+      sacctmgr: "/etc/ood/config/clusters.d/slurm_ccw/bin_overrides/sacctmgr.sh"
+  # Don't show ssh link in batch connect card
+  batch_connect:
+    ssh_allow: false
+    basic:
+      script_wrapper: |
+        module purge
+        %s

@@ -1,0 +1,23 @@
+---
+v2:
+  metadata:
+    title: "Login Slurm CCW"
+    hidden: true
+  job:
+    adapter: "systemd"
+    # Submit host can be the IP of the LB in front of the login VMSS
+    submit_host: "ccw-login-1"
+    # TODO: Fill up with ccw-login-1 => ccw-login-<max>
+    ssh_hosts:
+      - ccw-login-1
+    #site_timeout: 7200
+    strict_host_checking: false
+    debug: true
+
+  # Don't show ssh link in batch connect card
+  batch_connect:
+    ssh_allow: false
+    basic:
+      script_wrapper: |
+        module purge
+        %s
