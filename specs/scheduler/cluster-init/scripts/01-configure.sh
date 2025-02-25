@@ -18,4 +18,4 @@ cp -fv ${files_dir}/slurm_cluster.yml $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME.yml
 
 # Copy slurm command wrapper scripts to the shared directory
 mkdir -pv $OOD_CLUSTER_DIR/slurm_$CLUSTER_NAME
-cp -fv "${files_dir}/slurm_proxy.sh" "${files_dir}/sacctmgr.sh" "${files_dir}/sbatch.sh" "${files_dir}/scancel.sh" "${files_dir}/scontrol.sh" "${files_dir}/sinfo.sh" "${script_dir}/squeue.sh" $OOD_CLUSTER_DIR
+cp -fv "${files_dir}/slurm_proxy.sh" "${files_dir}/sacctmgr.sh" "${files_dir}/sbatch.sh" "${files_dir}/scancel.sh" "${files_dir}/scontrol.sh" "${files_dir}/sinfo.sh" "${files_dir}/squeue.sh" $OOD_CLUSTER_DIR
