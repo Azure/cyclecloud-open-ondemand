@@ -166,8 +166,8 @@ Order = 20
 
         [[[parameter ood_entra_tenant_id]]]
         Required = True
-        Label = Tenand Id
-        Description = Tenant Id
+        Label = Tenant ID
+        Description = Tenant ID
         Config.ParameterType = String
 
     [[parameters Azure Settings]]
@@ -178,8 +178,8 @@ Order = 20
         ParameterType = Cloud.Credentials
 
         [[[parameter ManagedIdentity]]]
-        Label = Managed Id
-        Description = Optionally assign an Azure user assigned managed identity to all nodes to access Azure resources using assigned roles.
+        Label = Managed Identity
+        Description = Optionally assign an Azure user-assigned managed identity to all nodes to access Azure resources using assigned roles.
         ParameterType = Azure.ManagedIdentity
         DefaultValue = =undefined
 
