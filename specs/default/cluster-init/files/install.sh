@@ -55,3 +55,4 @@ fi
 export PATH=/usr/bin:$PATH
 export ANSIBLE_VERBOSITY=2
 run_playbook ood $PLAYBOOKS_DIR/vars-ood.yml
+run_playbook register_cluster

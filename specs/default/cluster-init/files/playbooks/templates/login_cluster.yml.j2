@@ -1,15 +1,15 @@
 ---
 v2:
   metadata:
-    title: "Login __CLUSTERNAME__"
+    title: "Login {{cluster_name}}"
     hidden: true
   job:
     adapter: "systemd"
     # Submit host can be the IP of the LB in front of the login VMSS
-    submit_host: "__CLUSTERNAME__-login-1"
+    submit_host: "{{cluster_name}}-login-1"
     # TODO: Fill up with ccw-login-1 => ccw-login-<max>
     ssh_hosts:
-      - __CLUSTERNAME__-login-1
+      - {{cluster_name}}-login-1
     #site_timeout: 7200
     strict_host_checking: false
     debug: true
