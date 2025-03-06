@@ -87,6 +87,6 @@
 
   - name: Copy application files
     copy:
-      src: files/applications
+      src: files/applications/
       dest: /var/www/ood/apps/sys
       mode: '0755'
