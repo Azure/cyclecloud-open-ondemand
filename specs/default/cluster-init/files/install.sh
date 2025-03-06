@@ -26,7 +26,7 @@ function run_playbook ()
 
   # If running all playbooks and playbook marker doesn't exists, run the playbook
   # If user requested specific playbook ignore marker file and force run
-  if [ ! -e $PLAYBOOKS_DIR/$playbook.ok ] || [ "$TARGET" != "all" ]; then
+  if [ ! -e $PLAYBOOKS_DIR/$playbook.ok ] ; then
     local options=""
     if [ "$extra_vars_file" != "" ]; then
       # Merge overrides variables in a single file
@@ -55,3 +55,4 @@ fi
 export PATH=/usr/bin:$PATH
 export ANSIBLE_VERBOSITY=2
 run_playbook ood $PLAYBOOKS_DIR/vars-ood.yml
+run_playbook register_cluster
