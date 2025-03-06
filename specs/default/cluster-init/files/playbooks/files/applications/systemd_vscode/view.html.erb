@@ -1,0 +1,17 @@
+<%
+  require 'digest'
+  folder = "#{working_folder}"
+  
+  # Generate form id, based on host and port
+  form_id = Digest::SHA1.hexdigest("--" + host.to_s + "--" + port.to_s + "--")
+  base_url  = "/rnode/#{host}/#{port}/"
+
+%>
+
+<form id="<%= form_id %>" action="<%= base_url %>" method="get" target="_blank">
+  <input type="hidden" name="folder" value="<%= folder %>">
+  <input type="hidden" name="tkn" value="<%= password %>">
+  <button class="btn btn-primary" type="submit">
+    <i class="fa fa-cogs"></i> Connect to VS Code
+  </button>
+</form>

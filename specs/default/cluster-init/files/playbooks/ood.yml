@@ -78,11 +78,6 @@
       dest: /etc/ood/config/pun_pre_hook.sh
       mode: 0755
 
-  # Install the OOD applications    
-  # - name: Install the OOD applications
-  #   include_role:
-  #     name: ood_applications
-
   # Turn off the default bc_desktop
   - name: Turn off the default bc_desktop
     ansible.builtin.file:
@@ -90,8 +85,8 @@
       mode: '0600'
       state: directory
 
-  # # Create an announcement to connect a cluster
-  # - name: Copy the announcement file 
-  #   copy: 
-  #     src: files/announcement.yml
-  #     dest: /etc/ood/config/announcement.yml
+  - name: Copy application files
+    copy:
+      src: files/applications
+      dest: /var/www/ood/apps/sys
+      mode: '0755'
