@@ -3,7 +3,7 @@ v2:
   metadata:
     title: "Slurm {{cluster_name}}"
   login:
-    host: "{{cluster_name}}-login-1"
+    host: "{{login_nodes | first}}"
   job:
     adapter: "slurm"
     #bin: "/usr/bin"

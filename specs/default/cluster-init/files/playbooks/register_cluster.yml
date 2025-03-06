@@ -39,33 +39,46 @@
     
   - name: Retrieve the login nodes
     shell: |
-      jq '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ cluster_name }}.json
-    register: login_node
+      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ cluster_name }}.json
+    register: login_nodes
+
+  - name: set the node list array
+    set_fact:
+      login_nodes: "{{login_nodes.stdout | split('\n')}}"
 
   - name: Retrieve the scheduler node
     shell: |
-      jq '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/{{ cluster_name }}.json
+      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/{{ cluster_name }}.json
     register: scheduler
 
+  - name: set the scheduler name
+    set_fact:
+      scheduler: "{{scheduler.stdout}}"
+  
   - name: debug
     debug:
       msg: 
-        - "{{ login_node.stdout }}"
-        - "{{ scheduler.stdout }}"
-        - "{{ node_list.stdout }}"
+        - "{{ login_nodes }}"
+        - "{{ scheduler }}"
+        - "{{ bin_overrides_dir }}"
+
+  - name: Create the bin_overrides_dir directory
+    ansible.builtin.file:
+      path: "{{ bin_overrides_dir }}"
+      state: directory
 
   - name: Copy the bin overrides
-    ansible.builtin.file:
+    ansible.builtin.copy:
       src: "{{ item }}"
       dest: "{{ bin_overrides_dir }}/{{ item | basename }}"
       mode: '0755'
     loop:
-      - files/slurm/sbatch.sh
-      - files/slurm/squeue.sh
-      - files/slurm/scontrol.sh
-      - files/slurm/scancel.sh
-      - files/slurm/sinfo.sh
-      - files/slurm/sacctmgr.sh
+      - files/sbatch.sh
+      - files/squeue.sh
+      - files/scontrol.sh
+      - files/scancel.sh
+      - files/sinfo.sh
+      - files/sacctmgr.sh
 
   - name: Copy the slurm proxy script
     ansible.builtin.template:
