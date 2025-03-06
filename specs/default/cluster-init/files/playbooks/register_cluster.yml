@@ -1,7 +1,7 @@
 - hosts: localhost
   gather_facts: no
   become: true
-  variables:
+  vars:
     cluster_name: "ccw"
     ood_cluster_dir: "/shared/ood/config/clusters.d"
     bin_overrides_dir: "{{ood_cluster_dir}}/slurm_{{cluster_name}}/bin_overrides"
@@ -35,17 +35,16 @@
   
   - name: Retrieve the node list
     shell: |
-      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{ cluster_name }}/nodes
-    register: node_list
+      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{ cluster_name }}/nodes > /tmp/{{ cluster_name }}.json
     
   - name: Retrieve the login nodes
     shell: |
-      echo {{ node_list.stdout }} | jq '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname'
+      jq '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ cluster_name }}.json
     register: login_node
 
   - name: Retrieve the scheduler node
     shell: |
-      echo {{ node_list.stdout }} | jq '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname'
+      jq '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/{{ cluster_name }}.json
     register: scheduler
 
   - name: debug
