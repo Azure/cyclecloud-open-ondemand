@@ -3,6 +3,10 @@
   become: true
 
   tasks:
+  - name: install jq
+    ansible.builtin.package:
+      name: jq
+      state: present
 
   - name: Get the CycleCloud username
     shell: |
