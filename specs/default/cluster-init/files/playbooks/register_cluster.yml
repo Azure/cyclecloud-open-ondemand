@@ -38,20 +38,23 @@
   - name: Get CCW cluster name
     shell: |
       jq -r '.[] | select(.Configuration.OpenOnDemand.Disable!="false") | select(.ClusterName!="OpenOnDemand") | .ClusterName' /tmp/clusters.json  | head -n 1
-    register: cluster_name
+    register: cluster
 
-  - name: Get bin overrides dir
-    shell: |
-      printf {{ood_cluster_dir}}/slurm_{{ cluster_name.stdout }}/bin_overrides
-    register: bin_overrides_dir
+  - name: set the cluster name
+    set_fact:
+      cluster_name: "{{cluster.stdout}}"
+  
+  - name: set the bin_overrides_dir
+    set_fact:
+      bin_overrides_dir: "{{ood_cluster_dir}}/slurm_{{ cluster_name }}/bin_overrides"
 
   - name: Retrieve the node list
     shell: |
-      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{ cluster_name.stdout }}/nodes > /tmp/{{ cluster_name.stdout }}.json
+      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{ cluster_name }}/nodes > /tmp/{{ cluster_name }}.json
     
   - name: Retrieve the login nodes
     shell: |
-      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ cluster_name.stdout }}.json
+      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ cluster_name }}.json
     register: login_nodes
 
   - name: set the node list array
@@ -60,7 +63,7 @@
 
   - name: Retrieve the scheduler node
     shell: |
-      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/{{ cluster_name.stdout }}.json
+      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/{{ cluster_name }}.json
     register: scheduler
 
   - name: set the scheduler name
@@ -72,17 +75,17 @@
       msg: 
         - "{{ login_nodes }}"
         - "{{ scheduler }}"
-        - "{{ bin_overrides_dir.stdout }}"
+        - "{{ bin_overrides_dir }}"
 
   - name: Create the bin_overrides_dir directory
     ansible.builtin.file:
-      path: "{{ bin_overrides_dir.stdout }}"
+      path: "{{ bin_overrides_dir }}"
       state: directory
 
   - name: Copy the bin overrides
     ansible.builtin.copy:
       src: "{{ item }}"
-      dest: "{{ bin_overrides_dir.stdout }}/{{ item | basename }}"
+      dest: "{{ bin_overrides_dir }}/{{ item | basename }}"
       mode: '0755'
     loop:
       - files/sbatch.sh
@@ -95,17 +98,17 @@
   - name: Copy the slurm proxy script
     ansible.builtin.template:
       src: slurm_proxy.sh.j2
-      dest: "{{ bin_overrides_dir.stdout }}/slurm_proxy.sh"
+      dest: "{{ bin_overrides_dir }}/slurm_proxy.sh"
       mode: '0755'
 
   - name: Create the cluster configuration file
     ansible.builtin.template:
       src: slurm_cluster.yml.j2
-      dest: "{{ ood_cluster_dir }}/slurm_{{ cluster_name.stdout }}.yml"
+      dest: "{{ ood_cluster_dir }}/slurm_{{ cluster_name }}.yml"
       mode: '0644'
 
   - name: Create the login configuration file
     ansible.builtin.template:
       src: login_cluster.yml.j2
-      dest: "{{ ood_cluster_dir }}/login_slurm_{{ cluster_name.stdout }}.yml"
+      dest: "{{ ood_cluster_dir }}/login_slurm_{{ cluster_name }}.yml"
       mode: '0644'
