@@ -1,0 +1,10 @@
+---
+name: VSCode on Compute Node
+category: Interactive Apps
+subcategory: Compute Nodes
+role: batch_connect
+description: |
+  This app will launch a remote [VS Code] running as a web server.
+
+  [VS Code]: https://code.visualstudio.com"
+icon: fas://cog

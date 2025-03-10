@@ -1,0 +1,31 @@
+---
+cluster: "slurm*"
+form:
+  - bc_num_hours
+  - queue
+  - num_gpus
+  - working_dir
+attributes:
+  queue:
+    widget: select
+    options:
+      - ['htc - For Non MPI CPU Jobs', 'htc', data-hide-num-gpus: true, data-set-num-gpus: 0]
+      - ['hpc - For MPI CPU Jobs', 'hpc', data-hide-num-gpus: true, data-set-num-gpus: 0]
+      - ['gpu - For MPI or Non MPI GPU Jobs', 'gpu', data-hide-num-gpus: false, data-set-num-gpus: 1]
+
+  num_gpus:
+    widget: "number_field"
+    label: "Number of GPUs"
+    value: 0
+    min: 0
+    max: 8
+    step: 1
+
+  working_dir:
+    widget: "path_selector"
+    label: "Working Directory"
+    show_hidden: false
+    show_files: false
+    favorites: false
+    help: "Select your project directory; defaults to $HOME"
+  

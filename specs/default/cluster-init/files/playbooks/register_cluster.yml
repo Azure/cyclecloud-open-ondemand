@@ -1,0 +1,42 @@
+- hosts: localhost
+  gather_facts: no
+  become: true
+
+  tasks:
+  - name: install jq
+    ansible.builtin.package:
+      name: jq
+      state: present
+
+  - name: Get the CycleCloud username
+    shell: |
+      jetpack config cyclecloud.config.username
+    register: cyclecloud_username
+
+  - name: get the CycleCloud password
+    shell: |
+      jetpack config cyclecloud.config.password
+    register: cyclecloud_password
+
+  - name: Get the CycleCloud URL
+    shell: |
+      jetpack config cyclecloud.config.web_server
+    register: cyclecloud_url
+
+  - name: Get list of clusters
+    shell: |
+      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/cloud/clusters > /tmp/clusters.json
+
+  - name: Get Slurm clusters
+    shell: |
+      jq -r '.[]  | select(.BaseName == "slurm") | .ClusterName' /tmp/clusters.json
+    register: clusters
+
+  - name: Register Clusters
+    include_role:
+      name: register_cluster
+      apply: 
+        become: true
+    vars:
+      cluster_name: "{{ item }}"
+    loop: "{{ clusters.stdout | split('\n') }}"
