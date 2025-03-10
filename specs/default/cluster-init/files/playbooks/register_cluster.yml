@@ -2,9 +2,7 @@
   gather_facts: no
   become: true
   vars:
-    cluster_name: "ccw"
     ood_cluster_dir: "/shared/ood/config/clusters.d"
-    bin_overrides_dir: "{{ood_cluster_dir}}/slurm_{{cluster_name}}/bin_overrides"
 
   tasks:
   - name: Wait 300 seconds for the nodes to be ready
@@ -31,15 +29,29 @@
   - name: Get the CycleCloud URL
     shell: |
       jetpack config cyclecloud.config.web_server
-    register: cyclecloud_url  
+    register: cyclecloud_url
+
+  - name: Get list of clusters
+    shell: |
+      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/cloud/clusters > /tmp/clusters.json
   
+  - name: Get CCW cluster name
+    shell: |
+      jq -r '.[] | select(.Configuration.OpenOnDemand.Disable!="false") | select(.ClusterName!="OpenOnDemand") | .ClusterName' /tmp/clusters.json  | head -n 1
+    register: cluster_name
+
+  - name: Get bin overrides dir
+    shell: |
+      printf {{ood_cluster_dir}}/slurm_{{ cluster_name.stdout }}/bin_overrides
+    register: bin_overrides_dir
+
   - name: Retrieve the node list
     shell: |
-      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{ cluster_name }}/nodes > /tmp/{{ cluster_name }}.json
+      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{ cluster_name.stdout }}/nodes > /tmp/{{ cluster_name.stdout }}.json
     
   - name: Retrieve the login nodes
     shell: |
-      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ cluster_name }}.json
+      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ cluster_name.stdout }}.json
     register: login_nodes
 
   - name: set the node list array
@@ -48,7 +60,7 @@
 
   - name: Retrieve the scheduler node
     shell: |
-      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/{{ cluster_name }}.json
+      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/{{ cluster_name.stdout }}.json
     register: scheduler
 
   - name: set the scheduler name
@@ -60,17 +72,17 @@
       msg: 
         - "{{ login_nodes }}"
         - "{{ scheduler }}"
-        - "{{ bin_overrides_dir }}"
+        - "{{ bin_overrides_dir.stdout }}"
 
   - name: Create the bin_overrides_dir directory
     ansible.builtin.file:
-      path: "{{ bin_overrides_dir }}"
+      path: "{{ bin_overrides_dir.stdout }}"
       state: directory
 
   - name: Copy the bin overrides
     ansible.builtin.copy:
       src: "{{ item }}"
-      dest: "{{ bin_overrides_dir }}/{{ item | basename }}"
+      dest: "{{ bin_overrides_dir.stdout }}/{{ item | basename }}"
       mode: '0755'
     loop:
       - files/sbatch.sh
@@ -83,17 +95,17 @@
   - name: Copy the slurm proxy script
     ansible.builtin.template:
       src: slurm_proxy.sh.j2
-      dest: "{{ bin_overrides_dir }}/slurm_proxy.sh"
+      dest: "{{ bin_overrides_dir.stdout }}/slurm_proxy.sh"
       mode: '0755'
 
   - name: Create the cluster configuration file
     ansible.builtin.template:
       src: slurm_cluster.yml.j2
-      dest: "{{ ood_cluster_dir }}/slurm_{{ cluster_name }}.yml"
+      dest: "{{ ood_cluster_dir }}/slurm_{{ cluster_name.stdout }}.yml"
       mode: '0644'
 
   - name: Create the login configuration file
     ansible.builtin.template:
       src: login_cluster.yml.j2
-      dest: "{{ ood_cluster_dir }}/login_slurm_{{ cluster_name }}.yml"
+      dest: "{{ ood_cluster_dir }}/login_slurm_{{ cluster_name.stdout }}.yml"
       mode: '0644'
