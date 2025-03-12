@@ -1,4 +1,5 @@
 #!/bin/bash
+TARGET=${1:-all}
 ANSIBLE_TAGS=$@
 set -e
 OOD_ANSIBLE_VERSION="v4.0.0"
@@ -54,5 +55,20 @@ fi
 # Ignoring bcrypt-3.1.16 because its extensions are not built. Try: gem pristine bcrypt --version 3.1.16
 export PATH=/usr/bin:$PATH
 export ANSIBLE_VERBOSITY=2
-run_playbook ood $PLAYBOOKS_DIR/vars-ood.yml
-run_playbook register_cluster
+
+case $TARGET in
+  all)
+    run_playbook ood $PLAYBOOKS_DIR/vars-ood.yml
+    run_playbook register_cluster
+  ;;
+  register_cluster)
+    run_playbook $TARGET
+  ;;
+  ood)
+    run_playbook ood $PLAYBOOKS_DIR/vars-ood.yml
+  ;;
+  *)
+    echo "unknown target"
+    exit 1
+  ;;
+esac
