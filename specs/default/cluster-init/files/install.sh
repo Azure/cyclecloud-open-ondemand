@@ -1,4 +1,6 @@
 #!/bin/bash
+TARGET=${1:-all}
+shift
 ANSIBLE_TAGS=$@
 set -e
 OOD_ANSIBLE_VERSION="v4.0.0"
@@ -26,7 +28,7 @@ function run_playbook ()
 
   # If running all playbooks and playbook marker doesn't exists, run the playbook
   # If user requested specific playbook ignore marker file and force run
-  if [ ! -e $PLAYBOOKS_DIR/$playbook.ok ] || [ "$TARGET" != "all" ]; then
+  if [ ! -e $PLAYBOOKS_DIR/$playbook.ok ] ; then
     local options=""
     if [ "$extra_vars_file" != "" ]; then
       # Merge overrides variables in a single file
@@ -54,4 +56,20 @@ fi
 # Ignoring bcrypt-3.1.16 because its extensions are not built. Try: gem pristine bcrypt --version 3.1.16
 export PATH=/usr/bin:$PATH
 export ANSIBLE_VERBOSITY=2
-run_playbook ood $PLAYBOOKS_DIR/vars-ood.yml
+
+case $TARGET in
+  all)
+    run_playbook ood $PLAYBOOKS_DIR/vars-ood.yml
+    run_playbook register_cluster
+  ;;
+  register_cluster)
+    run_playbook $TARGET
+  ;;
+  ood)
+    run_playbook ood $PLAYBOOKS_DIR/vars-ood.yml
+  ;;
+  *)
+    echo "unknown target"
+    exit 1
+  ;;
+esac

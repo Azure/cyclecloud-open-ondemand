@@ -1,13 +1,14 @@
 #!/bin/bash
 # This script installs Open OnDemand (OOD) on AlmaLinux 8.x and Ubuntu 22.04.
-# It supports different authentication methods (Basic, LDAP, Entra) and configures the necessary settings for each.
+
 # The script performs the following steps:
 # 1. Replaces values in the vars.yml file with user-configured values from the CC template.
 # 2. Install Ansible and other dependencies.
 # 3. Runs the Ansible playbook to configure OOD.
-#set -x  # Uncomment to enable debugging
 set -e
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+script_name="${0##*/}"
+script_name="${script_name%.*}"
 
 # Install Ansible and other dependencies
 chmod +x $script_dir/../files/*.sh
@@ -40,4 +41,6 @@ fi
 ood_fqdn=$ood_fqdn yq -i '.ood_fqdn |= strenv(ood_fqdn)' $VARS_FILE
 
 # Install OOD
-$script_dir/../files/install.sh
+timestamp=$(date -u +"%Y-%m%d-%H%M%S")
+export ANSIBLE_LOG_PATH=$script_dir/${script_name}-${timestamp}.log
+$script_dir/../files/install.sh ood

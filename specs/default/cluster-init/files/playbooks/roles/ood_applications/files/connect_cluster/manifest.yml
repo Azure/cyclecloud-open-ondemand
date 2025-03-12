@@ -1,6 +1,0 @@
----
-name: Connect a cluster
-description: 'Connect to a CycleCloud Slurm cluster'
-category: Clusters
-subcategory: Connect
-icon: ''

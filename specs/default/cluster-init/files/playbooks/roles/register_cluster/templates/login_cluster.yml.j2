@@ -1,15 +1,17 @@
 ---
 v2:
   metadata:
-    title: "Login {{ cluster_name }}"
+    title: "Login {{cluster_name}}"
     hidden: true
   job:
     adapter: "systemd"
     # Submit host can be the IP of the LB in front of the login VMSS
-    submit_host: "{{ Login_ip }}"
-    # TODO: Fill up with ccw-login-1 => ccw-login-<max>
+    submit_host: "{{ login_nodes | first }}"
     ssh_hosts:
-      - {{ Login_ip }}
+{% for node in login_nodes %}
+      - {{node}}
+{% endfor %}
+
     #site_timeout: 7200
     strict_host_checking: false
     debug: true

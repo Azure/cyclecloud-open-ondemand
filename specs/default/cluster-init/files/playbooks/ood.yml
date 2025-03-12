@@ -29,6 +29,7 @@
     args:
       creates: "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.crt"
 
+ 
   - name: Run the ood-ansible role for HTTPS
     include_role:
       name: ood-ansible
@@ -54,6 +55,22 @@
   - name: Perform OS dependent post installation tasks
     include_tasks: "{{ansible_distribution}}/post_install.yml"
 
+  - name: remove the clusterd.d directory
+    ansible.builtin.file:
+      path: /etc/ood/config/clusters.d
+      state: absent
+
+  - name: Create the shared clusterd.d directory
+    ansible.builtin.file:
+      path: /shared/ood/config/clusters.d
+      state: directory
+
+  - name: Replace the clusters.d directory with a link to the shared directory
+    ansible.builtin.file:
+      src: /shared/ood/config/clusters.d
+      dest: /etc/ood/config/clusters.d
+      state: link
+
   # Create a script to run before the PUN is created, to set the user's environment if not exists
   # Defined in the pun_pre_hook_root_cmd variable set in the ood-overrides-common.yml file
   - name: Copy the pun_pre_hook script
@@ -62,11 +79,6 @@
       dest: /etc/ood/config/pun_pre_hook.sh
       mode: 0755
 
-  # Install the OOD applications    
-  - name: Install the OOD applications
-    include_role:
-      name: ood_applications
-
   # Turn off the default bc_desktop
   - name: Turn off the default bc_desktop
     ansible.builtin.file:
@@ -74,8 +86,8 @@
       mode: '0600'
       state: directory
 
-  # Create an announcement to connect a cluster
-  - name: Copy the announcement file 
-    copy: 
-      src: files/announcement.yml
-      dest: /etc/ood/config/announcement.yml
+  - name: Copy application files
+    copy:
+      src: files/applications/
+      dest: /var/www/ood/apps/sys
+      mode: '0755'

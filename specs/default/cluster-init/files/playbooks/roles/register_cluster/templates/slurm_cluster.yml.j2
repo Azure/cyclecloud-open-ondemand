@@ -1,0 +1,23 @@
+---
+v2:
+  metadata:
+    title: "Slurm {{cluster_name}}"
+  login:
+    host: "{{login_nodes | first}}"
+  job:
+    adapter: "slurm"
+    #bin: "/usr/bin"
+    bin_overrides:
+      sbatch: "{{bin_overrides_dir}}/sbatch.sh"
+      squeue: "{{bin_overrides_dir}}/squeue.sh"
+      scontrol: "{{bin_overrides_dir}}/scontrol.sh"
+      scancel: "{{bin_overrides_dir}}/scancel.sh"
+      sinfo: "{{bin_overrides_dir}}/sinfo.sh"
+      sacctmgr: "{{bin_overrides_dir}}/sacctmgr.sh"
+  # Don't show ssh link in batch connect card
+  batch_connect:
+    ssh_allow: false
+    basic:
+      script_wrapper: |
+        module purge
+        %s
