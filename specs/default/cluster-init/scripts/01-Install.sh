@@ -41,5 +41,6 @@ fi
 ood_fqdn=$ood_fqdn yq -i '.ood_fqdn |= strenv(ood_fqdn)' $VARS_FILE
 
 # Install OOD
-export ANSIBLE_LOG_PATH=$script_dir/${script_name}.log
+timestamp=$(date -u +"%Y-%m%d-%H%M%S")
+export ANSIBLE_LOG_PATH=$script_dir/${script_name}-${timestamp}.log
 $script_dir/../files/install.sh ood
