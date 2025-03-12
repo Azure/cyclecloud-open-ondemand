@@ -29,54 +29,28 @@
     args:
       creates: "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.crt"
 
-  - name: Install Open OnDemand
-    block:
-      - name: Fake error
-        shell: |
-          echo "Fake error"
-          exit 1
-        register: role_result
-        failed_when: role_result.failed
-
-    rescue:
-      - name: retry logic
-        set_fact:
-          retry_count: "{{ retry_count | default(0) + 1 }}"
-        
-      - name: Wait before retrying
-        pause:
-          seconds: 15
-        when: retry_count < 5
-  
-      - name: Run the ood-ansible role for HTTPS
-        include_role:
-          name: ood-ansible
-        vars:
-          ondemand_package: '{{ ood_package }}'
-          servername: '{{ ood_fqdn }}'
-          httpd_port: 443
-          ssl:
-            - SSLCertificateFile "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.crt"
-            - SSLCertificateKeyFile "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.key"
-            - SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
-            - SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256
-            - SSLVerifyClient none
-            - SSLProxyEngine On
-            - SSLProxyVerify none
-            - SSLProxyProtocol TLSv1.2
-            - SSLProxyCheckPeerName off
-            - SSLProxyVerify none
-            - SSLProxyCheckPeerCN Off
-            - SSLProxyCheckPeerName Off
-            - SSLProxyCheckPeerExpire Off
-        register: role_result
-        failed_when: role_result.failed
-
-      - name: Check if the role was successful
-        assert:
-          that: role_result.failed == false
-          fail_msg: "The ood-ansible role failed to install Open OnDemand"
-
+ 
+  - name: Run the ood-ansible role for HTTPS
+    include_role:
+      name: ood-ansible
+    vars:
+      ondemand_package: '{{ ood_package }}'
+      servername: '{{ ood_fqdn }}'
+      httpd_port: 443
+      ssl:
+        - SSLCertificateFile "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.crt"
+        - SSLCertificateKeyFile "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.key"
+        - SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+        - SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256
+        - SSLVerifyClient none
+        - SSLProxyEngine On
+        - SSLProxyVerify none
+        - SSLProxyProtocol TLSv1.2
+        - SSLProxyCheckPeerName off
+        - SSLProxyVerify none
+        - SSLProxyCheckPeerCN Off
+        - SSLProxyCheckPeerName Off
+        - SSLProxyCheckPeerExpire Off
 
   - name: Perform OS dependent post installation tasks
     include_tasks: "{{ansible_distribution}}/post_install.yml"
