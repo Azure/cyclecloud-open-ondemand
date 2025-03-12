@@ -50,6 +50,10 @@
         - SSLProxyCheckPeerCN Off
         - SSLProxyCheckPeerName Off
         - SSLProxyCheckPeerExpire Off
+    register: result
+    until: result is not failed
+    retries: 5
+    delay: 15
 
   - name: Perform OS dependent post installation tasks
     include_tasks: "{{ansible_distribution}}/post_install.yml"
