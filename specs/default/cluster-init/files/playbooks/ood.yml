@@ -91,3 +91,9 @@
       src: files/applications/
       dest: /var/www/ood/apps/sys
       mode: '0755'
+
+  - name: create cron entry to register clusters
+    cron:
+      name: "Register clusters"
+      minute: "0,10,20,30,40,50"
+      job: "rm -rf /mnt/cluster-init/ood/default/files/playbooks/register_cluster.ok && /mnt/cluster-init/ood/default/scripts/02-Register-Clusters.sh"
