@@ -4,13 +4,12 @@ set -e
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Register Clusters
-$script_dir/../files/install.sh register_cluster
+REGISTER_CLUSTER_SCRIPT=$script_dir/../files/register_cluster.sh
+chmod +x $REGISTER_CLUSTER_SCRIPT
+$REGISTER_CLUSTER_SCRIPT
 
-#write out current crontab
-crontab -l > tempcron
-#echo new cron into cron file
-echo "0,10,20,30,40,50 * * * *  rm -rf /mnt/cluster-init/ood/default/files/playbooks/register_cluster.ok && /mnt/cluster-init/ood/default/files/install register_cluster >> /opt/cycle/jetpack/logs/register_cluster.out 1>&2" >> tempcron
-#install new cron file
-crontab tempcron
+cron_command="rm -rf $REGISTER_CLUSTER_SCRIPT >> /opt/cycle/jetpack/logs/register_cluster.out 2>&1"
+cron_job="0,10,20,30,40,50 * * * * $cron_command"
 
-rm tempcron
+set +e # to avoid error if crontab is empty
+(crontab -l | grep -v -F "$cron_command" ; echo "$cron_job") | crontab -
