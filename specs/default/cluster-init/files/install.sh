@@ -1,5 +1,6 @@
 #!/bin/bash
 TARGET=${1:-all}
+shift
 ANSIBLE_TAGS=$@
 set -e
 OOD_ANSIBLE_VERSION="v4.0.0"
