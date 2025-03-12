@@ -7,6 +7,8 @@
 # 3. Runs the Ansible playbook to configure OOD.
 set -e
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+script_name="${0##*/}"
+script_name="${script_name%.*}"
 
 # Install Ansible and other dependencies
 chmod +x $script_dir/../files/*.sh
@@ -39,4 +41,5 @@ fi
 ood_fqdn=$ood_fqdn yq -i '.ood_fqdn |= strenv(ood_fqdn)' $VARS_FILE
 
 # Install OOD
+export ANSIBLE_LOG_PATH=$script_dir/${script_name}.log
 $script_dir/../files/install.sh ood
