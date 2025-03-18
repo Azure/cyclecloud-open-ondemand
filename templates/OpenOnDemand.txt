@@ -84,7 +84,7 @@ Autoscale = false
         Persistent = true
  
         [[[configuration cyclecloud.mounts.etc]]]
-        mountpoint = /etc/ood/config
+        mountpoint = /etc/ood
         fs_type = ext4 
 
         [[[network-interface eth0]]]
