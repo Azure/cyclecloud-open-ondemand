@@ -77,6 +77,16 @@ Autoscale = false
         Size = ${ifThenElse(BootDiskSize > 0, BootDiskSize, undefined)}
         SSD = True
 
+        [[[volume etc-vol1]]]
+        Size = 30
+        SSD = True
+        Mount = etc
+        Persistent = true
+ 
+        [[[configuration cyclecloud.mounts.etc]]]
+        mountpoint = /etc/ood/config
+        fs_type = ext4 
+
         [[[network-interface eth0]]]
         AssociatePublicIpAddress = $UsePublicNetwork
         NetworkInterfaceId = $ood_nic
