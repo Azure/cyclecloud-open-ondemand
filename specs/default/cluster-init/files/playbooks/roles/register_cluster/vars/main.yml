@@ -1,1 +1,1 @@
-  ood_cluster_dir: "/shared/ood/config/clusters.d"
+  ood_cluster_dir: "/etc/ood/config/clusters.d"
