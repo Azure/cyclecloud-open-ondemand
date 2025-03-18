@@ -11,7 +11,7 @@ pun_pre_hook_root_cmd: /etc/ood/config/pun_pre_hook.sh
 cancel_session_enabled: true
 
 pun_custom_env:
-  OOD_DASHBOARD_TITLE: "Open OnDemand for Azure CycleCloud"
+  OOD_DASHBOARD_TITLE: "Open OnDemand with Azure CycleCloud"
   OOD_BRAND_BG_COLOR: "#0078d4"
   OOD_BRAND_LINK_ACTIVE_BG_COLOR: "#212529"
   OOD_JOB_NAME_ILLEGAL_CHARS: "/"
