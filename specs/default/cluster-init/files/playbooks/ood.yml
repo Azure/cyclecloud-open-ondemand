@@ -52,9 +52,6 @@
         - SSLProxyCheckPeerName Off
         - SSLProxyCheckPeerExpire Off
 
-  - name: Perform OS dependent post installation tasks
-    include_tasks: "{{ansible_distribution}}/post_install.yml"
-
   # Create a script to run before the PUN is created, to set the user's environment if not exists
   # Defined in the pun_pre_hook_root_cmd variable set in the ood-overrides-common.yml file
   - name: Copy the pun_pre_hook script
@@ -75,3 +72,10 @@
       src: files/applications/
       dest: /var/www/ood/apps/sys
       mode: '0755'
+
+  - name: Update Apache configuration file
+    shell: |
+      /opt/ood/ood-portal-generator/sbin/update_ood_portal -f
+
+  - name: Perform OS dependent post installation tasks
+    include_tasks: "{{ansible_distribution}}/post_install.yml"
