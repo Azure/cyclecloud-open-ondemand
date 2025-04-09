@@ -28,7 +28,7 @@ This project supports the following operating systems:
   - Check 'Turn on the Microsoft Graph profile permission (required for claims to appear in token).'
   - In Certificate & Secrets, add a Federated Credentials using the OOD VM User Managed Identity, leave the default audience to api://AzureADTokenExchange
 
-- **CycleCloud Sslurm cluster deployed.**
+- **CycleCloud Slurm cluster deployed.**
 - **NFS home directories accessible** from both the cluster and the OOD VM (e.g., `/shared/home` export from the cluster scheduler).
 
 ## Deployment Steps
