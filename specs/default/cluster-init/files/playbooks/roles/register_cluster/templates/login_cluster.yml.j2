@@ -1,16 +1,13 @@
 ---
 v2:
   metadata:
-    title: "Login {{cluster_name}}"
+    title: "Login {{ item }}"
     hidden: true
   job:
     adapter: "systemd"
-    # Submit host can be the IP of the LB in front of the login VMSS
-    submit_host: "{{ login_nodes | first }}"
+    submit_host: "{{ item }}"
     ssh_hosts:
-{% for node in login_nodes %}
-      - {{node}}
-{% endfor %}
+      - {{ item }}
 
     #site_timeout: 7200
     strict_host_checking: false
