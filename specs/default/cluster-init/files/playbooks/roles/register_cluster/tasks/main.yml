@@ -80,5 +80,6 @@
 - name: Create the login configuration file
   ansible.builtin.template:
     src: login_cluster.yml.j2
-    dest: "{{ ood_cluster_dir }}/login_slurm_{{ cluster_name }}.yml"
+    dest: "{{ ood_cluster_dir }}/login_{{ item }}.yml"
     mode: '0644'
+  loop: login_nodes
