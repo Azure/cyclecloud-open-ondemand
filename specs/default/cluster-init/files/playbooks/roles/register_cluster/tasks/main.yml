@@ -82,4 +82,4 @@
     src: login_cluster.yml.j2
     dest: "{{ ood_cluster_dir }}/login_{{ item }}.yml"
     mode: '0644'
-  loop: login_nodes
+  loop: "{{login_nodes}}"
