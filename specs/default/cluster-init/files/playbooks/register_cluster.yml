@@ -48,7 +48,7 @@
 
   - name: Get registered clusters
     shell: |
-      ls -l /etc/ood/config/clusters.d | grep '^d' | awk '{print $9}' | sed 's/^slurm_//'
+      grep -l 'managed_by: "cyclecloud"' /etc/ood/config/clusters.d/slurm_*.yml | sed 's|.*/slurm_||;s|\.yml$||'
     register: registered_clusters_raw
     changed_when: false
     failed_when: false
