@@ -9,7 +9,7 @@ chmod +x $REGISTER_CLUSTER_SCRIPT
 $REGISTER_CLUSTER_SCRIPT
 
 cron_command="$REGISTER_CLUSTER_SCRIPT >> /opt/cycle/jetpack/logs/register_cluster.out 2>&1"
-cron_job="0,10,20,30,40,50 * * * * $cron_command"
+cron_job="0,5,10,15,20,25,30,35,40,45,50,55 * * * * $cron_command"
 
 set +e # to avoid error if crontab is empty
 (crontab -l | grep -v -F "$cron_command" ; echo "$cron_job") | crontab -
