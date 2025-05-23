@@ -29,7 +29,7 @@
 
   - name: Get active Slurm clusters
     shell: |
-      jq -r '.[]  | select(.BaseName == "slurm" and .State == "Started") | .ClusterName' /tmp/clusters.json
+      jq -r '.[]  | select( (.SourceTemplate | startswith("slurm_template_")) and .State=="Started") | .ClusterName' /tmp/clusters.json
     register: clusters_raw
 
   - name: Set fact with active cluster list

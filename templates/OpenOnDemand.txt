@@ -67,7 +67,7 @@ Autoscale = false
     MachineType = $MachineType
     IsReturnProxy = $ReturnProxy
     AdditionalClusterInitSpecs = $ClusterInitSpecs
-    ComputerName = "ood"
+    ComputerName = $ComputerName
 
         [[[configuration]]]
         cyclecloud.discoverable = true
@@ -121,6 +121,12 @@ Order = 10
         Label = Region
         Description = Deployment Location
         ParameterType = Cloud.Region
+
+        [[[parameter ComputerName]]]
+        Label = Hostname
+        Description = Hostname of the Open OnDemand virtual machine
+        ParameterType = String
+        DefaultValue = ood
 
         [[[parameter MachineType]]]
         Label = OOD Machine Type
