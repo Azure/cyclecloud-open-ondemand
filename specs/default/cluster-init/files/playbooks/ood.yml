@@ -17,9 +17,9 @@
     ansible.builtin.include_vars:
       file: "vars-{{auth_method | lower}}.yml"
 
-  - name: set variables for Ubuntu
-    set_fact:
-      ood_package: "ondemand={{ondemand_version}}"
+  - name: set OS specific variables
+    ansible.builtin.include_vars:
+      file: "{{ansible_distribution}}/vars.yml"
 
   - name: Generate a Self Signed OpenSSL certificate
     shell: |

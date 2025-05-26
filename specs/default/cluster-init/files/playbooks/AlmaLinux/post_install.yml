@@ -5,3 +5,6 @@
     state: restarted
     enabled: yes
 
+- name: disable SELinux
+  ansible.builtin.selinux:
+    state: disabled
