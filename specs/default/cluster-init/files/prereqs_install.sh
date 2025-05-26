@@ -10,6 +10,12 @@ MINICONDA_INSTALL_SCRIPT="${THIS_DIR}/miniconda-installer.sh"
 os_type=$(uname | awk '{print tolower($0)}')
 os_arch=$(arch)
 miniconda_url=$MINICONDA_URL_LINUX_X86
+. /etc/os-release
+case $ID in
+    almalinux)
+        dnf install -y wget git
+        ;;
+esac
 
 # Reuse environment if it doesn't already exist
 if [[ ! -d "${MINICONDA_INSTALL_DIR}" ]]; then
