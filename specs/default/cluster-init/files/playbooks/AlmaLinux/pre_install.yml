@@ -1,6 +1,6 @@
 ---
 - name: Make sure we have the latest root certificates in AlmaLinux
-  yum:
+  ansible.builtin.dnf:
     name: ca-certificates
     state: latest
     lock_timeout : 180

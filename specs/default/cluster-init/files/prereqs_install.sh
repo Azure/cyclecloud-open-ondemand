@@ -32,6 +32,15 @@ fi
 # Install Ansible
 printf "Installing Ansible\n"
 python3 -m pip install -r ${THIS_DIR}/requirements.txt
+. /etc/os-release
+case $ID in
+    almalinux)
+        dnf install -y python3-dnf
+        set +e
+        pip3 install "ansible-core<2.17"
+        set -e
+        ;;
+esac
 
 # Install dependencies
 printf "Installing dependencies\n"
