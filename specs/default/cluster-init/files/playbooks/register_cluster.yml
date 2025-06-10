@@ -27,14 +27,14 @@
     shell: |
       curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/cloud/clusters > /tmp/clusters.json
 
-  - name: Get active Slurm clusters
+  - name: Get active clusters
     shell: |
-      jq -r '.[]  | select( (.SourceTemplate | startswith("slurm_template_")) and .State=="Started") | .ClusterName' /tmp/clusters.json
+      jq -r '[.[]  | select(.State=="Started" and .BaseName!=null) | {name: .ClusterName, scheduler: .BaseName}]' /tmp/clusters.json | yq e -P
     register: clusters_raw
 
   - name: Set fact with active cluster list
     set_fact:
-      clusters: "{{ clusters_raw.stdout | default('') | split('\n') | reject('equalto', '') | list }}"
+      clusters: "{{ clusters_raw.stdout | from_yaml }}"
 
   - name: Register Clusters
     include_role:
@@ -42,8 +42,8 @@
       apply:
         become: true
     vars:
-      cluster_name: "{{ item }}"
-    loop: "{{ clusters }}"
+      cluster_name: item.name
+    with_items: "{{ clusters }}"
     when: clusters | length > 0
 
   - name: Get registered clusters
@@ -67,8 +67,8 @@
 
   - name: Gather active login nodes of active clusters by cluster
     shell: |
-      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ item }}.json
-    loop: "{{ clusters }}"
+      jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ item.name }}.json
+    with_items: "{{ clusters }}"
     register: login_nodes_by_cluster
     changed_when: false
     when: clusters | length > 0
