@@ -1,19 +1,11 @@
 ---
-cluster: "slurm*"
 form:
+  - global_ccw_clusters
+  - global_ccw_queues
   - bc_num_hours
-  - queue
   - num_gpus
   - working_dir
 attributes:
-  bc_num_hours:
-    display: true
-  queue:
-    widget: select
-    options:
-      - ['htc - For Non MPI CPU Jobs', 'htc', data-hide-num-gpus: true, data-set-num-gpus: 0]
-      - ['hpc - For MPI CPU Jobs', 'hpc', data-hide-num-gpus: true, data-set-num-gpus: 0]
-      - ['gpu - For MPI or Non MPI GPU Jobs', 'gpu', data-hide-num-gpus: false, data-set-num-gpus: 1]
 
   num_gpus:
     widget: "number_field"

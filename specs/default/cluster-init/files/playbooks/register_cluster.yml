@@ -25,16 +25,42 @@
 
   - name: Get list of clusters
     shell: |
-      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/cloud/clusters > /tmp/clusters.json
+      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/cloud/clusters > /tmp/raw_clusters.json
 
   - name: Get active clusters
     shell: |
-      jq -r '[.[]  | select(.State=="Started" and .BaseName!=null) | {name: .ClusterName, scheduler: .BaseName}]' /tmp/clusters.json | yq e -P
+      jq -r '[.[]  | select(.State=="Started" and .BaseName!=null) | {name: .ClusterName, scheduler: .BaseName}]' /tmp/raw_clusters.json > /tmp/clusters.json
+      yq -P /tmp/clusters.json
     register: clusters_raw
 
   - name: Set fact with active cluster list
     set_fact:
       clusters: "{{ clusters_raw.stdout | from_yaml }}"
+
+  - name: get node arrays per cluster
+    shell: |
+      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{item.name}}/status?nodes | jq '[.nodearrays[] | select(.buckets[0].quotaCount > 0 and .nodearray.Extends == "nodearraybase") | {name: .name, machineType: .buckets[0].definition.machineType, vcpuCount: .buckets[0].virtualMachine.vcpuCount, gpuCount: .buckets[0].virtualMachine.gpuCount, memorySizeGB: .buckets[0].virtualMachine.memory, infiniband: .buckets[0].virtualMachine.infiniband}]' > /tmp/{{ item.name }}.nodearrays.json
+    with_items: "{{ clusters }}"
+    when: clusters | length > 0
+
+  - name: merge node arrays into clusters
+    shell: |
+      jq -c '.[]' /tmp/clusters.json | while read -r obj; do
+        file="/tmp/$(echo "$obj" | jq -r '.name').nodearrays.json"
+        extra=$(jq '.' "$file")
+        echo "$obj" | jq --argjson extra "$extra" '.queues += $extra'
+      done | jq -s '.' | yq e -P
+    register: clusters_queues
+
+  - name: Set fact with active cluster list
+    set_fact:
+      clusters: "{{ clusters_queues.stdout | from_yaml }}"
+
+  - name: Create the global cluster and partition form attributes
+    ansible.builtin.template:
+      src: global_bc_items.yml.j2
+      dest: "/etc/ood/config/ondemand.d/global_bc_items.yml"
+      mode: '0644'
 
   - name: Register Clusters
     include_role:
@@ -42,24 +68,24 @@
       apply:
         become: true
     vars:
-      cluster_name: item.name
+      cluster_name: "{{ item.name }}"
     with_items: "{{ clusters }}"
     when: clusters | length > 0
 
   - name: Get registered clusters
     shell: |
-      grep -l 'managed_by: "cyclecloud"' /etc/ood/config/clusters.d/slurm_*.yml | sed 's|.*/slurm_||;s|\.yml$||'
+      grep -l 'managed_by: "cyclecloud"' /etc/ood/config/clusters.d/*.yml | grep -v login | xargs -I {} basename {} .yml
     register: registered_clusters_raw
     changed_when: false
     failed_when: false
 
   - name: Set fact with deleted cluster list
     set_fact:
-      deleted_clusters: "{{ ((registered_clusters_raw.stdout | default('') | trim) | length > 0) | ternary(registered_clusters_raw.stdout | split('\n'), []) | difference(clusters | default([])) }}"
-
+      deleted_clusters: "{{ ((registered_clusters_raw.stdout | default('') | trim) | length > 0) | ternary(registered_clusters_raw.stdout | split('\n'), []) | difference(clusters | map(attribute='scheduler') | zip(clusters | map(attribute='name')) | map('join', '_') | list | default([])) }}"
   - name: Remove config files and directories of deleted clusters from clusters.d
     shell: |
-      rm -f "/etc/ood/config/clusters.d/login_{{ item | lower }}-login-"*.yml "/etc/ood/config/clusters.d/slurm_{{ item }}.yml" && rm -rf "/etc/ood/config/clusters.d/slurm_{{ item }}"
+      rm -f "/etc/ood/config/clusters.d/login_{{ item | lower }}-login-"*.yml "/etc/ood/config/clusters.d/slurm_{{ item }}.yml"
+      rm -rf "/etc/ood/config/clusters.d/slurm_{{ item }}"
     args:
       executable: /bin/bash
     loop: "{{ deleted_clusters }}"
@@ -78,7 +104,7 @@
       login_nodes: "{{ login_nodes_by_cluster.results | map(attribute='stdout_lines') | flatten(1) }}"
     when: login_nodes_by_cluster is defined
 
-  - name: Gather all registered login nodes 
+  - name: Gather all registered login nodes
     shell: |
       ls -p /etc/ood/config/clusters.d | grep '^login_' | grep -v '/$' | sed -e 's/^login_//' -e 's/\.yml$//'
     register: registered_login_nodes_raw

@@ -1,0 +1,29 @@
+global_bc_form_items:
+  global_ccw_clusters:
+  # if there are multiple clusters defined then use a select, otherwise use a hidden field
+  # to avoid the need for a select with only one option
+{% if clusters | length > 1 %}
+    widget: select
+    label: "Cluster"
+    help: |
+     Select a cluster to submit your work on.
+    display: true
+    options:
+  {% for cluster in clusters %}
+      - [ '{{cluster.name}}', '{{cluster.scheduler}}_{{cluster.name}}' ]
+  {% endfor %}
+{% else %}
+    widget: hidden_field
+    value: "{{clusters[0].scheduler}}_{{clusters[0].name}}"
+{% endif %}
+
+
+  global_ccw_queues:
+    widget: select
+    label: "Partition"
+    options:
+{% for cluster in clusters %}
+{% for queue in ( cluster.queues | rejectattr('name', 'match', 'dynamic')) %}
+      - ['{{queue.name}} - {{queue.machineType}}{%if queue.infiniband %} - Infiniband{%endif%}', '{{queue.name}}' , data-hide-num-gpus: {% if queue.gpuCount > 0 %} false {% else %} true {% endif %}, data-max-num-gpus: {{queue.gpuCount}}, data-set-num-gpus: {{queue.gpuCount}}, data-exclusive-option-for-global-ccw-clusters-{{cluster.scheduler}}-{{cluster.name}}: true]
+{% endfor %}
+{% endfor %}
