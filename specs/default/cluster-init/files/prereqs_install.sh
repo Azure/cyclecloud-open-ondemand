@@ -26,6 +26,10 @@ else
     source "${MINICONDA_INSTALL_DIR}/bin/activate"
 fi
 
+# Accept conda licenses
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
 #printf "Update packages"
 #conda update -y --all
 
