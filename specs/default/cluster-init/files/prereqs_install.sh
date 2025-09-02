@@ -3,6 +3,13 @@ set -e
 # Installs Ansible. Optionally in a conda environment.
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+read_os()
+{
+    os_release=$(cat /etc/os-release | grep "^ID\=" | cut -d'=' -f 2 | xargs)
+    os_maj_ver=$(cat /etc/os-release | grep "^VERSION_ID\=" | cut -d'=' -f 2 | xargs)
+    full_version=$(cat /etc/os-release | grep "^VERSION\=" | cut -d'=' -f 2 | xargs)
+}
+read_os
 #MINICONDA_URL_LINUX_X86="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
 #MINICONDA_INSTALL_DIR=${1:-$THIS_DIR/miniconda}
 #MINICONDA_INSTALL_SCRIPT="${THIS_DIR}/miniconda-installer.sh"
@@ -10,6 +17,20 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #os_type=$(uname | awk '{print tolower($0)}')
 #os_arch=$(arch)
 #miniconda_url=$MINICONDA_URL_LINUX_X86
+
+case $os_release in
+    ubuntu)
+        apt update
+        DEBIAN_FRONTEND=noninteractive apt install -y python3-pip python3-venv
+        ;;
+    almalinux)
+        dnf install -y python3-pip python3-venv
+        ;;
+    *)
+        echo "ERROR: Unsupported OS: $os_release"
+        exit 1
+        ;;
+esac
 
 # Reuse environment if it doesn't already exist
 # if [[ ! -d "${MINICONDA_INSTALL_DIR}" ]]; then
