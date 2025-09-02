@@ -7,19 +7,6 @@ OOD_ANSIBLE_VERSION="v4.0.0"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PLAYBOOKS_DIR=$THIS_DIR/playbooks
 
-# load_miniconda() {
-#   # Note: packaging this inside a function to avoid forwarding arguments to conda
-#   if [ -d ${THIS_DIR}/miniconda ]; then
-#     echo "Activating conda environment"
-#     source ${THIS_DIR}/miniconda/bin/activate
-#   else
-#     ./prereqs_install.sh
-#     echo "Activating conda environment"
-#     source ${THIS_DIR}/miniconda/bin/activate
-#   fi
-# }
-# load_miniconda
-
 # Create or use the python venv oodenv environment
 PYTHON_ENV_DIR="${THIS_DIR}/oodenv"
 if [ ! -d "${PYTHON_ENV_DIR}" ]; then

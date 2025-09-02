@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-# Installs Ansible. Optionally in a conda environment.
+# Installs Ansible in a python environment.
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 read_os()
@@ -10,13 +10,7 @@ read_os()
     full_version=$(cat /etc/os-release | grep "^VERSION\=" | cut -d'=' -f 2 | xargs)
 }
 read_os
-#MINICONDA_URL_LINUX_X86="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
-#MINICONDA_INSTALL_DIR=${1:-$THIS_DIR/miniconda}
-#MINICONDA_INSTALL_SCRIPT="${THIS_DIR}/miniconda-installer.sh"
 
-#os_type=$(uname | awk '{print tolower($0)}')
-#os_arch=$(arch)
-#miniconda_url=$MINICONDA_URL_LINUX_X86
 
 case $os_release in
     ubuntu)
@@ -32,21 +26,6 @@ case $os_release in
         ;;
 esac
 
-# Reuse environment if it doesn't already exist
-# if [[ ! -d "${MINICONDA_INSTALL_DIR}" ]]; then
-#     printf "Installing Ansible in conda environment in %s from %s \n\n" "${MINICONDA_INSTALL_DIR}" "${miniconda_url}"
-
-#     # Actually install environment and install in base environment
-#     if [[ ! -f ${MINICONDA_INSTALL_SCRIPT} ]]; then
-#         wget -q $miniconda_url -O $MINICONDA_INSTALL_SCRIPT
-#     fi
-#     bash $MINICONDA_INSTALL_SCRIPT -b -p $MINICONDA_INSTALL_DIR
-#     source "${MINICONDA_INSTALL_DIR}/bin/activate"
-# else
-#     printf "Installing Ansible in existing conda environment in %s \n\n" "${MINICONDA_INSTALL_DIR}"
-#     source "${MINICONDA_INSTALL_DIR}/bin/activate"
-# fi
-
 # Create or use the python venv oodenv environment
 PYTHON_ENV_DIR="${THIS_DIR}/oodenv"
 if [ ! -d "${PYTHON_ENV_DIR}" ]; then
@@ -55,9 +34,6 @@ fi
 # activate environment
 source "${PYTHON_ENV_DIR}/bin/activate"
 
-#printf "Update packages"
-#conda update -y --all
-
 # Install Ansible
 printf "Installing Ansible\n"
 python3 -m pip install -r ${THIS_DIR}/requirements.txt
@@ -65,9 +41,6 @@ python3 -m pip install -r ${THIS_DIR}/requirements.txt
 # Install dependencies
 printf "Installing dependencies\n"
 ansible-playbook ${THIS_DIR}/dependencies.yml
-
-# Create oodconnector environment
-#conda create --clone base --name oodconnector
 
 printf "\n\n"
 printf "Applications installed\n"
