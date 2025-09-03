@@ -38,6 +38,7 @@ printf "Installing dependencies\n"
 ansible-playbook ${THIS_DIR}/dependencies.yml
 
 # Create oodconnector environment
+conda tos accept
 conda create --clone base --name oodconnector
 
 printf "\n\n"
