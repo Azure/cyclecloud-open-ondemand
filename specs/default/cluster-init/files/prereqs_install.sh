@@ -18,7 +18,7 @@ case $os_release in
         DEBIAN_FRONTEND=noninteractive apt install -y python3-pip python3-venv
         ;;
     almalinux)
-        dnf install -y python3-pip python3-venv
+        dnf install -y python3-pip
         ;;
     *)
         echo "ERROR: Unsupported OS: $os_release"
