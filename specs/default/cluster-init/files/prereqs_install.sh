@@ -33,10 +33,11 @@ if [ ! -d "${PYTHON_ENV_DIR}" ]; then
 fi
 # activate environment
 source "${PYTHON_ENV_DIR}/bin/activate"
+pip install --upgrade pip
 
 # Install Ansible
 printf "Installing Ansible\n"
-python3 -m pip install -r ${THIS_DIR}/requirements.txt
+python3 -m pip install -r ${THIS_DIR}/$os_release/requirements.txt
 
 # Install dependencies
 printf "Installing dependencies\n"

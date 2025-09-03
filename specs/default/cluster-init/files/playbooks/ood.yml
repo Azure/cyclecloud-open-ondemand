@@ -19,7 +19,7 @@
 
   - name: set variables for Ubuntu
     set_fact:
-      ood_package: "ondemand={{ondemand_version}}"
+      ood_package: "{{ ('ondemand=' if ( ansible_distribution == 'Ubuntu') else 'ondemand-') }}{{ondemand_version}}"
 
   - name: Generate a Self Signed OpenSSL certificate
     shell: |
