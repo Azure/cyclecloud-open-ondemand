@@ -6,3 +6,4 @@ ood_fqdn:
 client_id: 
 entra_map_match: contoso.com
 tenant_id: 
+user_claim: upn

@@ -11,7 +11,7 @@ httpd_auth:
 #     - Check the ID tokens in Implicit grant and hybrid flows
 #     - In Token Configuration add an optional claim
 #         - Token Type: ID
-#         - Check 'upn' in the claim list
+#         - Check 'upn' in the claim list or add a custom claim if you want to use another claim
 #     - Check 'Turn on the Microsoft Graph profile permission (required for claims to appear in token).'
 #     - In Certificate & Secrets, add a Federated Credentials using the OOD VM User Managed Identity, leave the default audience to api://AzureADTokenExchange
 
@@ -19,7 +19,7 @@ ood_auth_openidc:
   OIDCProviderMetadataURL: 'https://login.microsoftonline.com/{{tenant_id}}/v2.0/.well-known/openid-configuration'
   OIDCClientID: '{{ client_id }}'
   OIDCResponseType: 'id_token'
-  OIDCRemoteUserClaim: 'upn'
+  OIDCRemoteUserClaim: '{{ user_claim }}'
   OIDCScope: 'openid profile'
   OIDCCryptoPassphrase: "exec:/bin/bash -c \"head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32\""
   OIDCPassIDTokenAs: 'serialized'

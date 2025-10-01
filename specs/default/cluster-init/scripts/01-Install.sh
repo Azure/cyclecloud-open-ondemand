@@ -24,6 +24,7 @@ VARS_FILE=$script_dir/../files/playbooks/vars.yml
 client_id=$(jetpack config ood.entra_client_id) yq -i '.client_id |= strenv(client_id)' $VARS_FILE # Client ID for Entra
 entra_map_match=$(jetpack config ood.entra_user_map_match) yq -i '.entra_map_match |= strenv(entra_map_match)' $VARS_FILE # Domain Mapping for Entra
 tenant_id=$(jetpack config ood.entra_tenant_id) yq -i '.tenant_id |= strenv(tenant_id)' $VARS_FILE # Tenant ID for Entra, can be certainly automatically retrieved
+user_claim=$(jetpack config ood.user_claim) yq -i '.user_claim |= strenv(user_claim)' $VARS_FILE # User Claim for Entra, default is 'upn'
 
 # OOD server name - this can be the FQDN or IP address of the OOD server or the hostname. This will be used to generate the self-signed SSL certificate.
 ood_local_ipv4=$(jetpack config cloud.local_ipv4)

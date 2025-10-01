@@ -46,6 +46,7 @@ Autoscale = false
         ood.entra_client_id= $ood_entra_client_id  # Client ID for Entra
         ood.entra_tenant_id= $ood_entra_tenant_id  # Tenant ID for Entra
         ood.entra_user_map_match = $ood_entra_user_map_match # User domain mapping
+        ood.user_claim = $ood_user_claim # User Claim. Default to upn
 
 
         [[[configuration cyclecloud.mounts.nfs_shared]]]
@@ -179,6 +180,13 @@ Order = 20
         Label = User Domain
         Description = User domain mapping without '@'
         Config.ParameterType = String
+
+        [[[parameter ood_user_claim]]]
+        Required = True
+        Label = User Claim
+        Description = User Claim
+        Config.ParameterType = String
+        DefaultValue = upn
 
         [[[parameter ood_entra_tenant_id]]]
         Required = True
