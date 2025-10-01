@@ -184,7 +184,7 @@ Order = 20
         [[[parameter ood_user_claim]]]
         Required = True
         Label = User Claim
-        Description = User Claim
+        Description = User Claim to map in the Entra Id token
         Config.ParameterType = String
         DefaultValue = upn
 
