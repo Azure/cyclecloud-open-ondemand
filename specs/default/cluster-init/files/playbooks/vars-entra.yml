@@ -30,4 +30,8 @@ ood_auth_openidc:
 logout_redirect: "/oidc?logout=https%3A%2F%2F{{ ood_fqdn }}"
 oidc_uri: /oidc
 
-user_map_match: '^([^@]+)@{{ entra_map_match }}$'
+# User mapping entra_map_match regex, to extract the username from the user_claim claim
+# if empty, the full user_claim value will be used as username
+user_map_match: "{{ '^([^@]+)@' + entra_map_match + '$' if entra_map_match else '' }}"
+
+#user_map_match: '^([^@]+)@{{ entra_map_match }}$'

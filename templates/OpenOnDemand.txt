@@ -176,9 +176,9 @@ Order = 20
         Config.ParameterType = String
 
         [[[parameter ood_entra_user_map_match]]]
-        Required = True
+        Required = False
         Label = User Domain
-        Description = User domain mapping without '@'
+        Description = User domain mapping without '@' - leave empty to avoid domain mapping
         Config.ParameterType = String
 
         [[[parameter ood_user_claim]]]
