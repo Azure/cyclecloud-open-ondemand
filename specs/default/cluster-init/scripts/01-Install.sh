@@ -27,7 +27,7 @@ entra_map_match=$(jetpack config ood.entra_user_map_match)
 if [ "$entra_map_match" == "None" ]; then
     entra_map_match=""
 fi
-yq -i '.entra_map_match |= strenv(entra_map_match)' $VARS_FILE # Domain Mapping for Entra
+entra_map_match=$entra_map_match yq -i '.entra_map_match |= strenv(entra_map_match)' $VARS_FILE # Domain Mapping for Entra
 tenant_id=$(jetpack config ood.entra_tenant_id) yq -i '.tenant_id |= strenv(tenant_id)' $VARS_FILE # Tenant ID for Entra, can be certainly automatically retrieved
 user_claim=$(jetpack config ood.user_claim) yq -i '.user_claim |= strenv(user_claim)' $VARS_FILE # User Claim for Entra, default is 'upn'
 
