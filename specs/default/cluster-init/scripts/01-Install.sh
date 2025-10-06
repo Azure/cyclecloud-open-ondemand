@@ -22,7 +22,13 @@ VARS_FILE=$script_dir/../files/playbooks/vars.yml
 
 # Entra config - add values here if using Entra
 client_id=$(jetpack config ood.entra_client_id) yq -i '.client_id |= strenv(client_id)' $VARS_FILE # Client ID for Entra
-entra_map_match=$(jetpack config ood.entra_user_map_match) yq -i '.entra_map_match |= strenv(entra_map_match)' $VARS_FILE # Domain Mapping for Entra
+entra_map_match=$(jetpack config ood.entra_user_map_match)
+entra_map_match=$(echo $entra_map_match | tr '[:upper:]' '[:lower:]')
+# If entra_map_match is None, set it to empty
+if [ "$entra_map_match" == "none" ]; then
+    entra_map_match=""
+fi
+yq -i '.entra_map_match |= strenv(entra_map_match)' $VARS_FILE # Domain Mapping for Entra
 tenant_id=$(jetpack config ood.entra_tenant_id) yq -i '.tenant_id |= strenv(tenant_id)' $VARS_FILE # Tenant ID for Entra, can be certainly automatically retrieved
 user_claim=$(jetpack config ood.user_claim) yq -i '.user_claim |= strenv(user_claim)' $VARS_FILE # User Claim for Entra, default is 'upn'
 
