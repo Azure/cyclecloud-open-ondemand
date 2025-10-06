@@ -32,6 +32,6 @@ oidc_uri: /oidc
 
 # User mapping entra_map_match regex, to extract the username from the user_claim claim
 # if empty, the full user_claim value will be used as username
-user_map_match: "{{ '^([^@]+)@' + entra_map_match + '$' if entra_map_match else '' }}"
+user_map_match: "{{ '^([^@]+)@' + entra_map_match + '$' if entra_map_match else '.*' }}"
 
 #user_map_match: '^([^@]+)@{{ entra_map_match }}$'
