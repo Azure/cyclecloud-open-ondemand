@@ -8,12 +8,14 @@ global_bc_form_items:
     help: |
      Select a cluster to submit your work on.
     display: true
+    cacheable: false
     options:
   {% for cluster in clusters %}
       - [ '{{cluster.name}}', '{{cluster.scheduler}}_{{cluster.name}}' ]
   {% endfor %}
 {% else %}
     widget: hidden_field
+    cacheable: false
     value: "{{clusters[0].scheduler}}_{{clusters[0].name}}"
 {% endif %}
 
