@@ -23,13 +23,18 @@
       jetpack config cyclecloud.config.web_server
     register: cyclecloud_url
 
-  - name: Get list of clusters
+  - name: Get raw list of clusters
     shell: |
       curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/cloud/clusters > /tmp/raw_clusters.json
-
+      # Select only started schedulers based clusters
+      jq '[.[] | select(.Category == "Schedulers" and .State == "Started")]' /tmp/raw_clusters.json > /tmp/active_clusters.json
+      # for each active clusters with no BaseName, if "slurm" is present in any properties, set BaseName to "slurm"
+      jq 'map(if (has("BaseName") | not) and (tostring | ascii_downcase | contains("slurm")) then . + {BaseName: "slurm"} else . end)' /tmp/active_clusters.json > /tmp/active_clusters_temp.json           
+      mv /tmp/active_clusters_temp.json /tmp/active_clusters.json
+    
   - name: Get active clusters
     shell: |
-      jq -r '[.[]  | select(.State=="Started" and .BaseName!=null) | {name: .ClusterName, scheduler: .BaseName}]' /tmp/raw_clusters.json > /tmp/clusters.json
+      jq -r '[.[]  | select(.State=="Started" and .BaseName!=null) | {name: .ClusterName, scheduler: .BaseName}]' /tmp/active_clusters.json > /tmp/clusters.json
       yq -P /tmp/clusters.json
     register: clusters_raw
 
