@@ -52,14 +52,6 @@
         - SSLProxyCheckPeerName Off
         - SSLProxyCheckPeerExpire Off
 
-  # Force lowercase in user mapping
-  - name: Add lowercase conversion to user_map.lua
-    lineinfile:
-      path: /opt/ood/mod_ood_proxy/lib/ood/user_map.lua
-      insertafter: '^\s*sys_user = string\.match\(remote_user, user_map_match\)'
-      line: '    sys_user = string.lower(sys_user)'
-      state: present
-
   # Create a script to run before the PUN is created, to set the user's environment if not exists
   # Defined in the pun_pre_hook_root_cmd variable set in the ood-overrides-common.yml file
   - name: Copy the pun_pre_hook script
