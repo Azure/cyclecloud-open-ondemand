@@ -1,4 +1,9 @@
 ---
+# Skip the deprecated NodeSource GPG key - OnDemand 4.0 bundles Node.js
+# The old key https://deb.nodesource.com/gpgkey/nodesource.gpg.key with id 1655A0AB68576280 is no longer valid
+node_repo_key: "https://apt.osc.edu/ondemand/DEB-GPG-KEY-ondemand"
+node_repo_key_id: "4B72FE2B92D31755"
+
 ood_apps:
   dashboard:
     env:
