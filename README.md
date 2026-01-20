@@ -10,36 +10,30 @@ This project installs and configures Open OnDemand on a VM managed by CycleCloud
 
 This project supports the following operating systems:
 
-- AlmaLinux 8.x
-- Ubuntu 22.04
+- AlmaLinux 9.x
+- Ubuntu 22.04, 24.04
 
 ## Prerequisites
-
-**Configuration for Entra ID with Federated Identity**
-- Create a User Managed Identity for the OOD VM
-- Create a NIC for the OOD VM, in the compute subnet of your cluster
-- Create a new application in Entra ID
-- Configure the application with the following settings:
-  - Redirect URI: https://<NIC_IP>/oidc if using a private IP, otherwise the FQDN assigned with the above NIC IP.
-  - Check the ID tokens in Implicit grant and hybrid flows
-  - In Token Configuration add an optional claim
-      - Token Type: ID
-      - Check 'upn' in the claim list
-  - Check 'Turn on the Microsoft Graph profile permission (required for claims to appear in token).'
-  - In Certificate & Secrets, add a Federated Credentials using the OOD VM User Managed Identity, leave the default audience to api://AzureADTokenExchange
+The following steps are not required if using [CycleCloud Workspace for Slurm](https://learn.microsoft.com/en-us/azure/cyclecloud/overview-ccws?view=cyclecloud-8), as these steps are automated when deploying the OOD VM through the CycleCloud Workspace for Slurm project.
 
 - **CycleCloud Slurm cluster deployed.**
 - **NFS home directories accessible** from both the cluster and the OOD VM (e.g., `/shared/home` export from the cluster scheduler).
 
-## Deployment Steps
+**Configuration for Entra ID with Federated Identity**
+
+See [Register a Microsoft Entra ID application for Open OnDemand authentication](https://learn.microsoft.com/en-us/azure/cyclecloud/how-to/ccws/register-entra-id-app?view=cyclecloud-8)
+
+## Deployment Steps when not using CycleCloud Workspace for Slurm
 
 1. Clone the repository.
 2. Import the CycleCloud template : `cyclecloud import_template openondemand -f templates/OpenOnDemand.txt`
 3. Import the CycleCloud project : `cyclecloud project upload azure-storage`
 4. Create a cluster of type OpenOnDemand.
-5. Create user accounts in CycleCloud that match email addresses in EntraID using the regex `^([^@]+)@.*$` (e.g., `John.Doe@contoso.com` = `John.Doe`). <https://osc.github.io/ood-documentation/latest/authentication/overview/map-user.html>
+5. Start the cluster.
 
-Once the deployment steps are complete, you will have an OOD portal accessible at the IP of the deployed node, configured with EntraID authentication. Under the clusters menu, you will find an option to connect a cluster.
+## User Management
+
+See [Add users for Open OnDemand](https://learn.microsoft.com/en-us/azure/cyclecloud/how-to/ccws/open-ondemand-add-users?view=cyclecloud-8)
 
 If more than one cluster is to be configured, the same home directories must be used on all, and users must exist in the same central auth service.
 
