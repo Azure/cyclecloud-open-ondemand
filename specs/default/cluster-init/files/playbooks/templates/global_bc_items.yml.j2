@@ -8,12 +8,14 @@ global_bc_form_items:
     help: |
      Select a cluster to submit your work on.
     display: true
+    cacheable: false
     options:
   {% for cluster in clusters %}
       - [ '{{cluster.name}}', '{{cluster.scheduler}}_{{cluster.name}}' ]
   {% endfor %}
 {% else %}
     widget: hidden_field
+    cacheable: false
     value: "{{clusters[0].scheduler}}_{{clusters[0].name}}"
 {% endif %}
 
@@ -24,6 +26,6 @@ global_bc_form_items:
     options:
 {% for cluster in clusters %}
 {% for queue in ( cluster.queues | rejectattr('name', 'match', 'dynamic')) %}
-      - ['{{queue.name}} - {{queue.machineType}}{%if queue.infiniband %} - Infiniband{%endif%}', '{{queue.name}}' , data-hide-num-gpus: {% if queue.gpuCount > 0 %} false {% else %} true {% endif %}, data-max-num-gpus: {{queue.gpuCount}}, data-set-num-gpus: {{queue.gpuCount}}, data-exclusive-option-for-global-ccw-clusters-{{cluster.scheduler}}-{{cluster.name}}: true]
+      - ['{{queue.name}} - {{queue.machineType}}{%if queue.infiniband %} - Infiniband{%endif%}', '{{queue.name}}' , data-hide-num-gpus: {% if queue.gpuCount > 0 %} false {% else %} true {% endif %}, data-max-num-gpus: {{queue.gpuCount}}, data-set-num-gpus: {{queue.gpuCount}}, data-exclusive-option-for-global-ccw-clusters-{{cluster.scheduler}}-{{cluster.name | replace('_', '-')}}: true]
 {% endfor %}
 {% endfor %}
