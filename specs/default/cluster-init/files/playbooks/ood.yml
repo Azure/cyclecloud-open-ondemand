@@ -44,7 +44,6 @@
         - SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256
         - SSLVerifyClient none
         - SSLProxyEngine On
-        - SSLProxyVerify none
         - SSLProxyProtocol TLSv1.2
         - SSLProxyCheckPeerName off
         - SSLProxyVerify none
