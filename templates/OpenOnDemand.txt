@@ -178,9 +178,8 @@ Order = 20
         [[[parameter ood_entra_user_map_match]]]
         Required = False
         Label = User Domain
-        Description = User domain mapping without '@' - leave empty to avoid domain mapping - set to [%w%.%-]+ to match all domains (default)
+        Description = User domain mapping without '@' - leave empty to avoid domain mapping (default) - set to [%w%.%-]+ to match all domains
         Config.ParameterType = String
-        DefaultValue = [%w%.%-]+
 
         [[[parameter ood_user_claim]]]
         Required = True
