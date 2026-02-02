@@ -20,5 +20,5 @@
     "ood_entra_user_map_match": "contoso.com",
     "ClusterInitSpecs": null,
     "ood_nic": "/subscriptions/<id>/resourceGroups/<rg>/providers/Microsoft.Network/networkInterfaces/<nic>",
-    "ImageName": "cycle.image.ubuntu22"
+    "ImageName": "cycle.image.ubuntu24"
   }
