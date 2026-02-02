@@ -29,7 +29,16 @@
 
 - name: set the node list array
   set_fact:
-    login_nodes: "{{login_nodes.stdout | split('\n')}}"
+    login_nodes: "{{login_nodes.stdout | split('\n') | reject('equalto', '') | list}}"
+
+- name: Check if login nodes are available
+  debug:
+    msg: "No login nodes with status 'Ready' found for cluster {{ cluster_name }}. Skipping cluster registration as login nodes are required to proxy cluster access."
+  when: login_nodes | length == 0
+
+- name: End play if no login nodes are available
+  meta: end_host
+  when: login_nodes | length == 0
 
 - name: Retrieve the scheduler node
   shell: |
