@@ -26,6 +26,7 @@ ood_auth_openidc:
   OIDCPassRefreshToken: 'On'
   OIDCPassClaimsAs: 'environment'
   OIDCStateMaxNumberOfCookies: [7, true]
+  OIDCCABundlePath: '{{ ca_bundle_path }}'
 
 logout_redirect: "/oidc?logout=https%3A%2F%2F{{ ood_fqdn }}"
 oidc_uri: /oidc
