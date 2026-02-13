@@ -1,4 +1,11 @@
 ---
+- name: Allow httpd to make outbound network connections (required for OIDC)
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    state: true
+    persistent: true
+  when: ansible_selinux.status == "enabled"
+
 - name: Ensure apache is restarted
   service: 
     name: httpd
