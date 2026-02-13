@@ -1,7 +1,4 @@
 ---
-# As suggested in https://github.com/OSC/ood-ansible/issues/283 - to be removed when upgrading to ood-ansible >4.0.1
-node_repo_key_id: "6F71F525282841EEDAF851B42F59B5F99B1BE0B4"
-
 ood_apps:
   dashboard:
     env:

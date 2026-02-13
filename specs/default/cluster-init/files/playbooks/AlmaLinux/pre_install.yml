@@ -1,4 +1,15 @@
 ---
+- name: Disable SELinux
+  command: setenforce 0
+  changed_when: true
+  failed_when: false
+
+- name: Disable SELinux permanently
+  replace:
+    path: /etc/selinux/config
+    regexp: '^SELINUX=enforcing'
+    replace: 'SELINUX=disabled'
+
 - name: Make sure we have the latest root certificates in AlmaLinux
   yum:
     name: ca-certificates

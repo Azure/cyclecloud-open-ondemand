@@ -17,15 +17,15 @@
     ansible.builtin.include_vars:
       file: "vars-{{auth_method | lower}}.yml"
 
-  - name: set variables for Ubuntu
-    set_fact:
-      ood_package: "{{ ('ondemand=' if ( ansible_distribution == 'Ubuntu') else 'ondemand-') }}{{ondemand_version}}"
+  - name: Load OS-specific variables
+    ansible.builtin.include_vars:
+      file: "{{ ansible_distribution }}/vars.yml"
 
   - name: Generate a Self Signed OpenSSL certificate
     shell: |
       mkdir -pv /etc/ssl/{{ ood_fqdn }}
       cd /etc/ssl/{{ ood_fqdn }}
-      openssl req -nodes -new -x509 -keyout {{ ood_fqdn }}.key -out {{ ood_fqdn }}.crt -subj "/CN={{ ood_fqdn }}"
+      openssl req -nodes -new -x509 -keyout {{ ood_fqdn }}.key -out {{ ood_fqdn }}.crt -subj "/CN={{ ood_fqdn }}" -addext "subjectAltName=IP:{{ ood_fqdn }},DNS:{{ ood_fqdn }}"
     args:
       creates: "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.crt"
 

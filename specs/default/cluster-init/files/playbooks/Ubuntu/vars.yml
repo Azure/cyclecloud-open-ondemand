@@ -1,0 +1,6 @@
+---
+ood_package: "ondemand={{ ondemand_version }}"
+ca_bundle_path: /etc/ssl/certs/ca-certificates.crt
+
+# Override repo URL to use OOD 4.1 repository - to be removed when upgrading to ood-ansible >4.0.1
+apt_repo_url: "https://apt.osc.edu/ondemand/4.1/ondemand-release-web_4.1.0-{{ deb_distro }}_all.deb"

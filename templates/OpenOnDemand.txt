@@ -228,11 +228,7 @@ Order = 20
         ParameterType = Cloud.Image
         Config.OS = linux
         DefaultValue = cycle.image.ubuntu24
-        Config.Filter := Package in {"cycle.image.ubuntu24", "cycle.image.ubuntu22"}
-        Description = Note: almalinux8 has been removed for this release due to registration issues with OpenID. You may still enter 'almalinux8' manually.
-        # almalinux8 is temporarily removed as there are issues with registering OpenID under alma currently.
-        # You may still enter in 'almalinux8' manually, or any other custom image.
-        # , "almalinux8"}
+        Config.Filter := Package in {"cycle.image.ubuntu24", "cycle.image.ubuntu22", "almalinux8", "almalinux9"}
 
         [[[parameter ClusterInitSpecs]]]
         Label = Cluster-Init Projects
