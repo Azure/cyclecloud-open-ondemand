@@ -3,7 +3,7 @@ TARGET=${1:-all}
 shift
 ANSIBLE_TAGS=$@
 set -e
-OOD_ANSIBLE_VERSION="v4.0.1"
+OOD_ANSIBLE_VERSION="v4.1.0"
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PLAYBOOKS_DIR=$THIS_DIR/playbooks
 
