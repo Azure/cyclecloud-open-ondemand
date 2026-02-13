@@ -1,13 +1,4 @@
 ---
-### START - to be removed when upgrading to ood-ansible >4.0.1
-# As suggested in https://github.com/OSC/ood-ansible/issues/283
-#node_repo_key_id: "6F71F525282841EEDAF851B42F59B5F99B1BE0B4"
-
-# Override repo URLs to use OOD 4.1 repository (ood-ansible v4.0.1 defaults to 4.0) - to be removed when upgrading to ood-ansible >4.0.1
-rpm_repo_url: "https://yum.osc.edu/ondemand/4.1/ondemand-release-web-4.1-1.{{ el_distro }}.noarch.rpm"
-apt_repo_url: "https://apt.osc.edu/ondemand/4.1/ondemand-release-web_4.1.0-{{ deb_distro }}_all.deb"
-### END - to be removed when upgrading to ood-ansible >4.0.1
-
 ood_apps:
   dashboard:
     env:

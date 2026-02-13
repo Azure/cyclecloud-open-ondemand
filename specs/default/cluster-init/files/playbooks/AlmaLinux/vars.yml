@@ -1,3 +1,9 @@
 ---
 ood_package: "ondemand-{{ ondemand_version }}"
 ca_bundle_path: /etc/pki/tls/certs/ca-bundle.crt
+
+# Override repo URL to use OOD 4.1 repository - to be removed when upgrading to ood-ansible >4.0.1
+rpm_repo_url: "https://yum.osc.edu/ondemand/4.1/ondemand-release-web-4.1-1.{{ el_distro }}.noarch.rpm"
+
+# Install the ondemand-selinux package for proper SELinux policies
+install_ondemand_selinux: true
