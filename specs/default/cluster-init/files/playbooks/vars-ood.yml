@@ -10,6 +10,12 @@ rnode_uri: '/rnode'
 pun_pre_hook_root_cmd: /etc/ood/config/pun_pre_hook.sh
 cancel_session_enabled: true
 
+# This is to support SSL reverse proxy for ThinLinc
+secure_rnode_uri: '/secure-rnode'
+ssl_proxy:
+  - 'SSLProxyCheckPeerCN Off'
+  - 'SSLProxyCheckPeerName Off'
+
 pun_custom_env:
   OOD_DASHBOARD_TITLE: "Open OnDemand with Azure CycleCloud"
   OOD_BRAND_BG_COLOR: "#0078d4"
