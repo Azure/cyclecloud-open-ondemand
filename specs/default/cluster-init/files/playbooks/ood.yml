@@ -1,5 +1,5 @@
 - hosts: localhost
-  gather_facts: no
+  gather_facts: false
   become: true
   vars_files: vars.yml
 
@@ -21,11 +21,15 @@
     ansible.builtin.include_vars:
       file: "{{ ansible_distribution }}/vars.yml"
 
+  - name: Set certificate SAN type
+    set_fact:
+      ood_san: "{% if ood_fqdn is ansible.utils.ipv4 or ood_fqdn is ansible.utils.ipv6 %}IP:{{ ood_fqdn }}{% else %}DNS:{{ ood_fqdn }}{% endif %}"
+
   - name: Generate a Self Signed OpenSSL certificate
     shell: |
       mkdir -pv /etc/ssl/{{ ood_fqdn }}
       cd /etc/ssl/{{ ood_fqdn }}
-      openssl req -nodes -new -x509 -keyout {{ ood_fqdn }}.key -out {{ ood_fqdn }}.crt -subj "/CN={{ ood_fqdn }}" -addext "subjectAltName=IP:{{ ood_fqdn }},DNS:{{ ood_fqdn }}"
+      openssl req -nodes -new -x509 -keyout {{ ood_fqdn }}.key -out {{ ood_fqdn }}.crt -subj "/CN={{ ood_fqdn }}" -addext "subjectAltName={{ ood_san }}"
     args:
       creates: "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.crt"
 
