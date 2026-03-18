@@ -38,7 +38,8 @@ dashboard_layout:
       - width: 8
         widgets:
           - pinned_apps
-          - motd
+          - sessions
       - width: 4
         widgets:
           - file_quotas
+          - system_status
