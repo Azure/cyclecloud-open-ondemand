@@ -30,3 +30,15 @@ pinned_apps_group_by: category
 pinned_apps:
   - sys/shell
   - category: 'Interactive Apps'
+
+# See https://osc.github.io/ood-documentation/latest/customizations.html#custom-layouts-in-the-dashboard
+dashboard_layout:
+  rows:
+    - columns:
+      - width: 8
+        widgets:
+          - pinned_apps
+          - motd
+      - width: 4
+        widgets:
+          - file_quotas
