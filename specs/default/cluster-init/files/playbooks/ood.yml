@@ -25,7 +25,12 @@
     shell: |
       mkdir -pv /etc/ssl/{{ ood_fqdn }}
       cd /etc/ssl/{{ ood_fqdn }}
-      openssl req -nodes -new -x509 -keyout {{ ood_fqdn }}.key -out {{ ood_fqdn }}.crt -subj "/CN={{ ood_fqdn }}" -addext "subjectAltName=IP:{{ ood_fqdn }},DNS:{{ ood_fqdn }}"
+      if echo "{{ ood_fqdn }}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'; then
+        SAN="IP:{{ ood_fqdn }}"
+      else
+        SAN="DNS:{{ ood_fqdn }}"
+      fi
+      openssl req -nodes -new -x509 -keyout {{ ood_fqdn }}.key -out {{ ood_fqdn }}.crt -subj "/CN={{ ood_fqdn }}" -addext "subjectAltName=${SAN}"
     args:
       creates: "/etc/ssl/{{ ood_fqdn }}/{{ ood_fqdn }}.crt"
 
