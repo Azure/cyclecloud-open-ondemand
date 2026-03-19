@@ -83,12 +83,11 @@
       dest: /var/www/ood/public/custom.css
       mode: '0644'
 
-  - name: Configure OOD to load custom CSS
+  - name: Configure OOD dashboard customizations
     copy:
       content: |
-        custom_css_files:
-          - "/custom.css"
-      dest: /etc/ood/config/ondemand.d/custom_css.yml
+        custom_css_files: {{ custom_css_files | to_json }}
+      dest: /etc/ood/config/ondemand.d/dashboard_customizations.yml
       mode: '0644'
 
   - name: Update Apache configuration file

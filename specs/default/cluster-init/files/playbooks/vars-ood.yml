@@ -31,6 +31,13 @@ pinned_apps:
   - sys/shell
   - category: 'Interactive Apps'
 
+# Hide OOD logo and welcome message on the dashboard
+disable_dashboard_welcome_message: true
+
+# Custom CSS files loaded on every dashboard page (relative to /var/www/ood/public/)
+custom_css_files:
+  - "/custom.css"
+
 # See https://osc.github.io/ood-documentation/latest/customizations.html#custom-layouts-in-the-dashboard
 dashboard_layout:
   rows:
