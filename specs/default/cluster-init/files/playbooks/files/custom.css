@@ -2,3 +2,8 @@
 .alert-undefined {
   display: none;
 }
+
+/* Hide the "Pinned Apps" title and subtitle above the pinned app cards */
+h2:has(+ #pinned-app-cards) {
+  display: none;
+}
