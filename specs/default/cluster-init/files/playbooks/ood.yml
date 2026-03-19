@@ -87,6 +87,7 @@
     copy:
       content: |
         custom_css_files: {{ custom_css_files | to_json }}
+        disable_dashboard_welcome_message: {{ disable_dashboard_welcome_message | default(false) }}
       dest: /etc/ood/config/ondemand.d/dashboard_customizations.yml
       mode: '0644'
 
