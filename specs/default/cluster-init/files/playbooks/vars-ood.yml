@@ -10,9 +10,6 @@ rnode_uri: '/rnode'
 pun_pre_hook_root_cmd: /etc/ood/config/pun_pre_hook.sh
 cancel_session_enabled: true
 
-# Hide spurious alert-undefined elements from widgets that fail to load
-custom_css_files: ["/custom.css"]
-
 # This is to support SSL reverse proxy for ThinLinc
 secure_rnode_uri: '/secure-rnode'
 ssl_proxy:

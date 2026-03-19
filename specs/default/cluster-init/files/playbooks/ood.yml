@@ -83,6 +83,14 @@
       dest: /var/www/ood/public/custom.css
       mode: '0644'
 
+  - name: Configure OOD to load custom CSS
+    copy:
+      content: |
+        custom_css_files:
+          - "/custom.css"
+      dest: /etc/ood/config/ondemand.d/custom_css.yml
+      mode: '0644'
+
   - name: Update Apache configuration file
     shell: |
       /opt/ood/ood-portal-generator/sbin/update_ood_portal -f
