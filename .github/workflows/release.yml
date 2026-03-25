@@ -1,0 +1,47 @@
+#
+# Copyright (c) Microsoft Corporation
+# Licensed under the MIT License.
+#
+name: product-release
+
+on:
+  push:
+    tags:
+      - '*'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.repository == 'Azure/cyclecloud-open-ondemand'
+    permissions:
+      contents: write
+
+    env:
+      VERSION: ${{ github.ref_name }}
+      GITHUB_TOKEN: ${{ secrets.ACTION_PAT }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.ACTION_PAT }}
+
+      - name: Validate release tag
+        run: |
+          set -euo pipefail
+          chmod +x ./release.sh
+          ./release.sh "$VERSION"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.ACTION_PAT }}
+          tag_name: ${{ env.VERSION }}
+          prerelease: true
+          make_latest: false
+          generate_release_notes: true
