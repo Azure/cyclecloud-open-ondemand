@@ -22,14 +22,14 @@ jobs:
 
     env:
       VERSION: ${{ github.ref_name }}
-      GITHUB_TOKEN: ${{ secrets.ACTION_PAT }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.ACTION_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate release tag
         run: |
@@ -40,7 +40,7 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          token: ${{ secrets.ACTION_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ env.VERSION }}
           prerelease: true
           make_latest: false
