@@ -77,9 +77,41 @@
       dest: /var/www/ood/apps/sys
       mode: '0755'
 
+  - name: Copy custom CSS file
+    copy:
+      src: files/custom.css
+      dest: /var/www/ood/public/custom.css
+      mode: '0644'
+
+  - name: Configure OOD dashboard customizations
+    copy:
+      content: |
+        custom_css_files: {{ custom_css_files | to_json }}
+        disable_dashboard_welcome_message: {{ disable_dashboard_welcome_message | default(false) }}
+      dest: /etc/ood/config/ondemand.d/dashboard_customizations.yml
+      mode: '0644'
+
   - name: Update Apache configuration file
     shell: |
       /opt/ood/ood-portal-generator/sbin/update_ood_portal -f
+
+  # Disk quota warnings on dashboard
+  # See: https://osc.github.io/ood-documentation/latest/customizations.html#disk-quota-warnings-on-dashboard
+  - name: Copy the disk quota generation script
+    copy:
+      src: files/generate_quota.sh
+      dest: /etc/ood/config/generate_quota.sh
+      mode: '0755'
+
+  - name: Generate initial disk quota JSON
+    command: /etc/ood/config/generate_quota.sh
+
+  - name: Set up cron job to refresh disk quota every 5 minutes
+    cron:
+      name: "ood disk quota update"
+      minute: "*/5"
+      job: "/etc/ood/config/generate_quota.sh"
+      user: root
 
   - name: Perform OS dependent post installation tasks
     include_tasks: "{{ansible_distribution}}/post_install.yml"
