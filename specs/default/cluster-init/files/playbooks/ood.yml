@@ -71,11 +71,21 @@
       mode: '0600'
       state: directory
 
-  - name: Copy application files
-    copy:
-      src: files/applications/
-      dest: /var/www/ood/apps/sys
-      mode: '0755'
+  - name: Clone bc_vscode application
+    ansible.builtin.git:
+      repo: https://github.com/xpillons/bc_vscode.git
+      dest: /var/www/ood/apps/sys/bc_vscode
+      version: v1.0.1
+      depth: 1
+      force: true
+
+  - name: Clone systemd_vscode application
+    ansible.builtin.git:
+      repo: https://github.com/xpillons/systemd_vscode.git
+      dest: /var/www/ood/apps/sys/systemd_vscode
+      version: v1.0.1
+      depth: 1
+      force: true
 
   - name: Copy custom CSS file
     copy:
