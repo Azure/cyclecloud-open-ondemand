@@ -16,6 +16,13 @@ ssl_proxy:
   - 'SSLProxyCheckPeerCN Off'
   - 'SSLProxyCheckPeerName Off'
 
+# This is to support reverse proxy for ThinLinc, to rewrite the URL in the HTML response body
+custom_location_directives:
+  - '<If "%{REQUEST_URI} =~ m|^/secure-rnode/([^/]+)/(\d+)/connect/\1|">'
+  - '  AddOutputFilterByType SUBSTITUTE text/html application/javascript'
+  - '  Substitute "s|https://([^/:]+):(\d+)/|/secure-rnode/$1/$2/|i"'
+  - '</If>'
+
 pun_custom_env:
   OOD_DASHBOARD_TITLE: "Open OnDemand with Azure CycleCloud"
   OOD_BRAND_BG_COLOR: "#0078d4"
