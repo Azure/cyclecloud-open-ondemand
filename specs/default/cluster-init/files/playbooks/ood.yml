@@ -73,7 +73,7 @@
 
   - name: Clone bc_vscode application
     ansible.builtin.git:
-      repo: https://github.com/xpillons/bc_vscode.git
+      repo: https://github.com/CycleCloudCommunity/bc_vscode.git
       dest: /var/www/ood/apps/sys/bc_vscode
       version: v1.0.1
       depth: 1
@@ -81,7 +81,7 @@
 
   - name: Clone systemd_vscode application
     ansible.builtin.git:
-      repo: https://github.com/xpillons/systemd_vscode.git
+      repo: https://github.com/CycleCloudCommunity/systemd_vscode.git
       dest: /var/www/ood/apps/sys/systemd_vscode
       version: v1.0.1
       depth: 1
