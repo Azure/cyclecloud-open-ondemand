@@ -92,7 +92,7 @@ Autoscale = false
         AssociatePublicIpAddress = $UsePublicNetwork
         NetworkInterfaceId = $ood_nic
 
-        [[[cluster-init ood:default:1.1.4]]]
+        [[[cluster-init ood:default:1.1.5]]]
 
 
 [parameters About]
