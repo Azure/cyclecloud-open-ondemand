@@ -133,7 +133,7 @@ Order = 10
         Label = OOD Machine Type
         Description = The machine type for the Open OnDemand Server host
         ParameterType = Cloud.MachineType
-        DefaultValue = Standard_D4as_v4
+        DefaultValue = Standard_D4ads_v5
 
         [[[parameter NodeTags]]]
         Label = VM Tags

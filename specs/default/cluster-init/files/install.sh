@@ -42,9 +42,12 @@ function run_playbook ()
 }
 
 # Ensure submodule exists
-if [ ! -d "${PLAYBOOKS_DIR}/roles/ood-ansible/.github" ]; then
+CLONE_COMPLETE_FILE="${PLAYBOOKS_DIR}/roles/ood-ansible/.clone-complete"
+if [ ! -e "$CLONE_COMPLETE_FILE" ]; then
+    rm -rf "$PLAYBOOKS_DIR/roles/ood-ansible"
     printf "Installing OOD Ansible submodule\n"
     git clone -b $OOD_ANSIBLE_VERSION https://github.com/OSC/ood-ansible.git $PLAYBOOKS_DIR/roles/ood-ansible
+    touch "$CLONE_COMPLETE_FILE"
 fi
 
 # This trick is to avoid the error when running the OOD tasks handlers with errors like these:
