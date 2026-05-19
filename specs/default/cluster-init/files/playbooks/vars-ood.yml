@@ -19,6 +19,7 @@ ssl_proxy:
 # This is to support reverse proxy for ThinLinc, to rewrite the URL in the HTML response body
 custom_location_directives:
   - '<If "%{REQUEST_URI} =~ m|^/secure-rnode/([^/]+)/(\d+)/connect/\1|">'
+  - '  LoadModule substitute_module /usr/lib/apache2/modules/mod_substitute.so'
   - '  AddOutputFilterByType SUBSTITUTE text/html application/javascript'
   - '  Substitute "s|https://([^/:]+):(\d+)/|/secure-rnode/$1/$2/|i"'
   - '</If>'
