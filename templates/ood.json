@@ -17,7 +17,6 @@
     "NFSAddress": "ANF-IP",
     "Filer": null,
     "BootDiskSize": 0,
-    "ood_entra_user_map_match": "contoso.com",
     "ClusterInitSpecs": null,
     "ood_nic": "/subscriptions/<id>/resourceGroups/<rg>/providers/Microsoft.Network/networkInterfaces/<nic>",
     "ImageName": "cycle.image.ubuntu24"

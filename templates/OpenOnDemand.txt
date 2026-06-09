@@ -45,7 +45,6 @@ Autoscale = false
         # Entra config - add values here if using Entra
         ood.entra_client_id= $ood_entra_client_id  # Client ID for Entra
         ood.entra_tenant_id= $ood_entra_tenant_id  # Tenant ID for Entra
-        ood.entra_user_map_match = $ood_entra_user_map_match # User domain mapping
         ood.user_claim = $ood_user_claim # User Claim. Default to upn
 
 
@@ -173,12 +172,6 @@ Order = 20
         Required = True
         Label = Client ID
         Description = Client or Application ID for Entra
-        Config.ParameterType = String
-
-        [[[parameter ood_entra_user_map_match]]]
-        Required = False
-        Label = User Domain
-        Description = User domain mapping without '@' - leave empty to avoid domain mapping (default) - set to [%w%.%-]+ to match all domains
         Config.ParameterType = String
 
         [[[parameter ood_user_claim]]]
