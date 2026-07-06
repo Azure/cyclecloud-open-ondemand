@@ -23,9 +23,26 @@
       jetpack config cyclecloud.config.web_server
     register: cyclecloud_url
 
+  - name: API call for list of clusters
+    uri:
+      url: "{{ cyclecloud_url.stdout }}/cloud/clusters"
+      method: GET
+      return_content: yes
+      status_code: 200
+      validate_certs: false
+      force_basic_auth: true
+      url_username: "{{ cyclecloud_username.stdout }}"
+      url_password: "{{ cyclecloud_password.stdout }}"
+    register: api_response_cluster_list
+
+  - name: Export API results to JSON File
+    ansible.builtin.copy:
+      content: "{{ api_response_cluster_list.json | to_nice_json }}"
+      dest: "/tmp/raw_clusters.json"
+      mode: '0644'
+
   - name: Get raw list of clusters
     shell: |
-      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/cloud/clusters > /tmp/raw_clusters.json
       # Select only started schedulers based clusters
       jq '[.[] | select(.Category == "Schedulers" and .State == "Started")]' /tmp/raw_clusters.json > /tmp/active_clusters.json
       # for each active clusters with no BaseName, if "slurm" is present in any properties, set BaseName to "slurm"
@@ -42,10 +59,32 @@
     set_fact:
       clusters: "{{ clusters_raw.stdout | from_yaml }}"
 
-  - name: get node arrays per cluster
-    shell: |
-      curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{item.name}}/status?nodes | jq '[.nodearrays[] | select(.buckets[0].quotaCount > 0 and .nodearray.Extends == "nodearraybase") | {name: .name, machineType: .buckets[0].definition.machineType, vcpuCount: .buckets[0].virtualMachine.vcpuCount, gpuCount: .buckets[0].virtualMachine.gpuCount, memorySizeGB: .buckets[0].virtualMachine.memory, infiniband: .buckets[0].virtualMachine.infiniband}]' > /tmp/{{ item.name }}.nodearrays.json
+  - name: API call for nodes by cluster
+    uri:
+      url: "{{ cyclecloud_url.stdout }}/clusters/{{item.name}}/status?nodes"
+      method: GET
+      return_content: yes
+      status_code: 200
+      validate_certs: false
+      force_basic_auth: true
+      url_username: "{{ cyclecloud_username.stdout }}"
+      url_password: "{{ cyclecloud_password.stdout }}"
     with_items: "{{ clusters }}"
+    when: clusters | length > 0
+    register: api_response_nodes_by_cluster
+
+  - name: Save node status per cluster
+    ansible.builtin.copy:
+      content: "{{ item.json | to_nice_json }}"
+      dest: "/tmp/{{ item.item.name }}_nodes_raw.json"
+      mode: '0644'
+    loop: "{{ api_response_nodes_by_cluster.results }}"
+    when: item.skipped is not defined or not item.skipped
+
+  - name: Get node arrays per cluster
+    shell: |
+      jq '[.nodearrays[] | select(.buckets[0].quotaCount > 0 and .nodearray.Extends == "nodearraybase") | {name: .name, machineType: .buckets[0].definition.machineType, vcpuCount: .buckets[0].virtualMachine.vcpuCount, gpuCount: .buckets[0].virtualMachine.gpuCount, memorySizeGB: .buckets[0].virtualMachine.memory, infiniband: .buckets[0].virtualMachine.infiniband}]' /tmp/{{ item.name }}_nodes_raw.json > /tmp/{{ item.name }}.nodearrays.json
+    loop: "{{ clusters }}"
     when: clusters | length > 0
 
   - name: merge node arrays into clusters

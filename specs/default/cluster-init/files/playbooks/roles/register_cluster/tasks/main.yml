@@ -18,9 +18,23 @@
   set_fact:
     bin_overrides_dir: "{{ood_cluster_dir}}/slurm_{{ cluster_name }}/bin_overrides"
 
-- name: Retrieve the node list
-  shell: |
-    curl -k -u {{ cyclecloud_username.stdout }}:{{ cyclecloud_password.stdout }} {{ cyclecloud_url.stdout }}/clusters/{{ cluster_name }}/nodes > /tmp/{{ cluster_name }}.json
+- name: API call for list of nodes
+  uri:
+    url: "{{ cyclecloud_url.stdout }}/clusters/{{ cluster_name }}/nodes"
+    method: GET
+    return_content: yes
+    status_code: 200
+    validate_certs: false
+    force_basic_auth: true
+    url_username: "{{ cyclecloud_username.stdout }}"
+    url_password: "{{ cyclecloud_password.stdout }}"
+  register: api_response_node_list
+
+- name: Export API Results to JSON File
+  ansible.builtin.copy:
+    content: "{{ api_response_node_list.json | to_nice_json }}"
+    dest: "/tmp/{{ cluster_name }}.json"
+    mode: '0644'
   
 - name: Retrieve the login nodes
   shell: |
