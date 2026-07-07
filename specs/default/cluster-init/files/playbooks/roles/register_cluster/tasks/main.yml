@@ -34,12 +34,12 @@
 - name: Export API Results to JSON File
   ansible.builtin.copy:
     content: "{{ api_response_node_list.json | to_nice_json }}"
-    dest: "/tmp/{{ cluster_name }}.json"
+    dest: "/tmp/playbook_files/{{ cluster_name }}.json"
     mode: '0600'
   
 - name: Retrieve the login nodes
   shell: |
-    jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/{{ cluster_name }}.json
+    jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="login") | .Hostname' /tmp/playbook_files/{{ cluster_name }}.json
   register: login_nodes
 
 - name: set the node list array
@@ -57,7 +57,7 @@
 
 - name: Retrieve the scheduler node
   shell: |
-    jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/{{ cluster_name }}.json
+    jq -r '.nodes[] | select(.Status=="Ready") | select(.Template=="scheduler") | .Hostname' /tmp/playbook_files/{{ cluster_name }}.json
   register: scheduler
 
 - name: set the scheduler name
