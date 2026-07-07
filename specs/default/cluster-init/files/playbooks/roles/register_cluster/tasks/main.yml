@@ -29,12 +29,13 @@
     url_username: "{{ cyclecloud_username.stdout }}"
     url_password: "{{ cyclecloud_password.stdout }}"
   register: api_response_node_list
+  no_log: true
 
 - name: Export API Results to JSON File
   ansible.builtin.copy:
     content: "{{ api_response_node_list.json | to_nice_json }}"
     dest: "/tmp/{{ cluster_name }}.json"
-    mode: '0644'
+    mode: '0600'
   
 - name: Retrieve the login nodes
   shell: |

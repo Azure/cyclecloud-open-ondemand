@@ -34,12 +34,13 @@
       url_username: "{{ cyclecloud_username.stdout }}"
       url_password: "{{ cyclecloud_password.stdout }}"
     register: api_response_cluster_list
+    no_log: true
 
   - name: Export API results to JSON File
     ansible.builtin.copy:
       content: "{{ api_response_cluster_list.json | to_nice_json }}"
       dest: "/tmp/raw_clusters.json"
-      mode: '0644'
+      mode: '0600'
 
   - name: Get raw list of clusters
     shell: |
@@ -72,13 +73,14 @@
     with_items: "{{ clusters }}"
     when: clusters | length > 0
     register: api_response_nodes_by_cluster
+    no_log: true
 
   - name: Save node status per cluster
     ansible.builtin.copy:
       content: "{{ item.json | to_nice_json }}"
       dest: "/tmp/{{ item.item.name }}_nodes_raw.json"
-      mode: '0644'
-    loop: "{{ api_response_nodes_by_cluster.results }}"
+      mode: '0600'
+    loop: "{{ api_response_nodes_by_cluster.results if (api_response_nodes_by_cluster is defined and api_response_nodes_by_cluster.results is defined) else [] }}"
     when: item.skipped is not defined or not item.skipped
 
   - name: Get node arrays per cluster
