@@ -75,7 +75,7 @@
     ansible.builtin.git:
       repo: https://github.com/CycleCloudCommunity/bc_vscode.git
       dest: /var/www/ood/apps/sys/bc_vscode
-      version: v1.0.1
+      version: v1.1.0
       depth: 1
       force: true
 
@@ -83,7 +83,7 @@
     ansible.builtin.git:
       repo: https://github.com/CycleCloudCommunity/systemd_vscode.git
       dest: /var/www/ood/apps/sys/systemd_vscode
-      version: v1.0.1
+      version: v1.1.0
       depth: 1
       force: true
 
