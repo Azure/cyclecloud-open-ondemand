@@ -10,7 +10,7 @@ PLAYBOOKS_DIR=$THIS_DIR/playbooks
 # Create or use the python venv oodenv environment
 PYTHON_ENV_DIR="${THIS_DIR}/oodenv"
 if [ ! -d "${PYTHON_ENV_DIR}" ]; then
-    python3 -m venv "${PYTHON_ENV_DIR}"
+    /usr/bin/python3 -m venv "${PYTHON_ENV_DIR}"
 fi
 # activate environment
 source "${PYTHON_ENV_DIR}/bin/activate"
